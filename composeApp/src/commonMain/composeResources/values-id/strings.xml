@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">Beauthy</string>
+    <string name="app_tagline">Authenticator amanmu</string>
+
+    <!-- List Screen -->
+    <string name="title_authenticator">Authenticator</string>
+    <string name="cd_scan_qr">Pindai QR Code</string>
+    <string name="cd_add_account">Tambah akun</string>
+    <string name="cd_delete_account">Hapus akun</string>
+    <string name="cd_remaining_seconds">%1$d detik tersisa</string>
+    <string name="cd_otp_code">Kode OTP: %1$s</string>
+    <string name="empty_title">Belum ada akun</string>
+    <string name="empty_subtitle">Tekan + untuk menambah akun</string>
+    <string name="dialog_delete_title">Hapus Akun</string>
+    <string name="dialog_delete_message">Hapus %1$s (%2$s)?</string>
+    <string name="action_delete">Hapus</string>
+    <string name="action_cancel">Batal</string>
+
+    <!-- Add Account Screen -->
+    <string name="title_add_account">Tambah Akun</string>
+    <string name="cd_back">Kembali</string>
+    <string name="add_subtitle">Masukkan detail akun secara manual</string>
+    <string name="label_issuer">Issuer (nama layanan)</string>
+    <string name="hint_issuer">contoh: Google, GitHub</string>
+    <string name="label_account_name">Nama Akun</string>
+    <string name="hint_account_name">contoh: user@email.com</string>
+    <string name="label_secret_key">Secret Key</string>
+    <string name="hint_secret_key">Base32 secret key</string>
+    <string name="cd_hide_secret">Sembunyikan secret key</string>
+    <string name="cd_show_secret">Tampilkan secret key</string>
+    <string name="action_add_account">Tambah Akun</string>
+    <string name="label_key_type">Tipe Key</string>
+    <string name="key_type_totp">Berbasis waktu (TOTP)</string>
+    <string name="key_type_hotp">Berbasis counter (HOTP)</string>
+
+    <!-- List Screen HOTP -->
+    <string name="cd_refresh_hotp">Generate kode baru</string>
+    <string name="label_counter">Counter: %1$d</string>
+
+    <!-- Scan Screen -->
+    <string name="title_scan_qr">Pindai QR Code</string>
+    <string name="scan_invalid_qr">QR code bukan format OTP yang valid</string>
+    <string name="scan_permission_required">Izin kamera diperlukan untuk scan QR code</string>
+    <string name="scan_waiting_permission">Menunggu izin kamera…</string>
+
+    <!-- Validation -->
+    <string name="error_issuer_empty">Issuer tidak boleh kosong</string>
+    <string name="error_account_empty">Nama akun tidak boleh kosong</string>
+    <string name="error_secret_empty">Secret key tidak boleh kosong</string>
+    <string name="error_secret_short">Secret key terlalu pendek (minimal 8 karakter)</string>
+    <string name="error_secret_invalid">Secret key bukan format Base32 yang valid</string>
+</resources>

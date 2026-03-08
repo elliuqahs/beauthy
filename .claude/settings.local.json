@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew composeApp:compileKotlinMetadata:*)",
+      "Bash(./gradlew composeApp:compileDebugKotlinAndroid:*)",
+      "Bash(./gradlew composeApp:allTests:*)",
+      "Bash(./gradlew composeApp:compileCommonMainKotlinMetadata:*)",
+      "Bash(./gradlew composeApp:testDebugUnitTest:*)",
+      "Bash(do strings:*)",
+      "Bash(./gradlew composeApp:compileKotlinIosSimulatorArm64:*)",
+      "Bash(./gradlew composeApp:generateComposeResClass:*)",
+      "Bash(./gradlew composeApp:generateResourceAccessorsForCommonMain:*)",
+      "Bash(./gradlew compileCommonMainKotlinMetadata:*)",
+      "Bash(./gradlew compileDebugKotlinAndroid:*)",
+      "Bash(./gradlew compileKotlinIosSimulatorArm64:*)",
+      "Bash(./gradlew jvmTest:*)",
+      "Bash(./gradlew:*)"
+    ]
+  }
+}
