@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">Beauthy</string>
+    <string name="app_tagline">Your secure authenticator</string>
+
+    <!-- List Screen -->
+    <string name="title_authenticator">Authenticator</string>
+    <string name="cd_scan_qr">Scan QR Code</string>
+    <string name="cd_add_account">Add account</string>
+    <string name="cd_delete_account">Delete account</string>
+    <string name="cd_remaining_seconds">%1$d seconds remaining</string>
+    <string name="cd_otp_code">OTP code: %1$s</string>
+    <string name="empty_title">No accounts yet</string>
+    <string name="empty_subtitle">Tap + to add an account</string>
+    <string name="dialog_delete_title">Delete Account</string>
+    <string name="dialog_delete_message">Delete %1$s (%2$s)?</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Add Account Screen -->
+    <string name="title_add_account">Add Account</string>
+    <string name="cd_back">Back</string>
+    <string name="add_subtitle">Enter account details manually</string>
+    <string name="label_issuer">Issuer (service name)</string>
+    <string name="hint_issuer">e.g. Google, GitHub</string>
+    <string name="label_account_name">Account Name</string>
+    <string name="hint_account_name">e.g. user@email.com</string>
+    <string name="label_secret_key">Secret Key</string>
+    <string name="hint_secret_key">Base32 secret key</string>
+    <string name="cd_hide_secret">Hide secret key</string>
+    <string name="cd_show_secret">Show secret key</string>
+    <string name="action_add_account">Add Account</string>
+    <string name="label_key_type">Key Type</string>
+    <string name="key_type_totp">Time-based (TOTP)</string>
+    <string name="key_type_hotp">Counter-based (HOTP)</string>
+
+    <!-- List Screen HOTP -->
+    <string name="cd_refresh_hotp">Generate new code</string>
+    <string name="label_counter">Counter: %1$d</string>
+
+    <!-- Scan Screen -->
+    <string name="title_scan_qr">Scan QR Code</string>
+    <string name="scan_invalid_qr">QR code is not a valid OTP format</string>
+    <string name="scan_permission_required">Camera permission is required to scan QR code</string>
+    <string name="scan_waiting_permission">Waiting for camera permission…</string>
+
+    <!-- Validation -->
+    <string name="error_issuer_empty">Issuer cannot be empty</string>
+    <string name="error_account_empty">Account name cannot be empty</string>
+    <string name="error_secret_empty">Secret key cannot be empty</string>
+    <string name="error_secret_short">Secret key is too short</string>
+    <string name="error_secret_invalid">Secret key is not a valid Base32 format</string>
+</resources>
