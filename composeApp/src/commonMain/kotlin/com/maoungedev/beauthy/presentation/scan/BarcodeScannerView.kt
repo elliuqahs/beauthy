@@ -4,6 +4,6 @@ import androidx.compose.runtime.Composable
 
 @Composable
 expect fun BarcodeScannerView(
-    onBarcodeScanned: (String) -> Unit,
+    onBarcodeScanned: (String) -> Boolean,
     onPermissionDenied: () -> Unit
 )

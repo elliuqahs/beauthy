@@ -28,6 +28,7 @@ import beauthy.composeapp.generated.resources.Res
 import beauthy.composeapp.generated.resources.app_name
 import beauthy.composeapp.generated.resources.app_tagline
 import beauthy.composeapp.generated.resources.compose_multiplatform
+import beauthy.composeapp.generated.resources.logo
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -56,12 +57,12 @@ class SplashScreen : Screen {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer),
+                .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(Res.drawable.compose_multiplatform),
+                painter = painterResource(Res.drawable.logo),
                 contentDescription = stringResource(Res.string.app_name),
                 modifier = Modifier
                     .size(120.dp)
@@ -72,14 +73,14 @@ class SplashScreen : Screen {
                 text = stringResource(Res.string.app_name),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.alpha(alpha)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(Res.string.app_tagline),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
                 modifier = Modifier.alpha(alpha)
             )
         }

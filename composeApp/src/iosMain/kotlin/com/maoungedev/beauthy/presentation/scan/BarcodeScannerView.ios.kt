@@ -36,7 +36,6 @@ import platform.AVFoundation.AVMetadataObjectTypeQRCode
 import platform.AVFoundation.authorizationStatusForMediaType
 import platform.AVFoundation.requestAccessForMediaType
 import platform.CoreGraphics.CGRectMake
-import platform.QuartzCore.CATransaction
 import platform.UIKit.UIView
 import platform.darwin.NSObject
 import platform.darwin.dispatch_async
@@ -47,7 +46,7 @@ import platform.posix.QOS_CLASS_USER_INITIATED
 @OptIn(ExperimentalForeignApi::class)
 @Composable
 actual fun BarcodeScannerView(
-    onBarcodeScanned: (String) -> Unit,
+    onBarcodeScanned: (String) -> Boolean,
     onPermissionDenied: () -> Unit
 ) {
     var hasPermission by remember { mutableStateOf(false) }
@@ -91,7 +90,7 @@ actual fun BarcodeScannerView(
 @OptIn(ExperimentalForeignApi::class)
 @Composable
 private fun IosCameraPreview(
-    onBarcodeScanned: (String) -> Unit
+    onBarcodeScanned: (String) -> Boolean
 ) {
     var scanned by remember { mutableStateOf(false) }
     val captureSession = remember { AVCaptureSession() }
@@ -108,8 +107,8 @@ private fun IosCameraPreview(
                     val metadataObj = obj as? AVMetadataMachineReadableCodeObject ?: continue
                     val value = metadataObj.stringValue ?: continue
                     if (!scanned) {
-                        scanned = true
-                        onBarcodeScanned(value)
+                        val accepted = onBarcodeScanned(value)
+                        scanned = accepted
                     }
                 }
             }
@@ -126,9 +125,12 @@ private fun IosCameraPreview(
         }
     }
 
-    UIKitView(
+    UIKitView<UIView>(
         factory = {
-            val containerView = UIView(frame = CGRectMake(0.0, 0.0, 1.0, 1.0))
+            val previewLayer = AVCaptureVideoPreviewLayer(session = captureSession)
+            previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+
+            val containerView = CameraPreviewView(previewLayer)
 
             val device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
             if (device != null) {
@@ -144,11 +146,6 @@ private fun IosCameraPreview(
                     metadataOutput.metadataObjectTypes = listOf(AVMetadataObjectTypeQRCode)
                 }
 
-                val previewLayer = AVCaptureVideoPreviewLayer(session = captureSession)
-                previewLayer.frame = containerView.bounds
-                previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-                containerView.layer.addSublayer(previewLayer)
-
                 dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED.toLong(), 0u)) {
                     captureSession.startRunning()
                 }
@@ -156,13 +153,20 @@ private fun IosCameraPreview(
 
             containerView
         },
-        modifier = Modifier.fillMaxSize(),
-        update = { view ->
-            val previewLayer = view.layer.sublayers?.firstOrNull() as? AVCaptureVideoPreviewLayer
-            CATransaction.begin()
-            CATransaction.setDisableActions(true)
-            previewLayer?.frame = view.bounds
-            CATransaction.commit()
-        }
+        modifier = Modifier.fillMaxSize()
     )
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private class CameraPreviewView(
+    private val previewLayer: AVCaptureVideoPreviewLayer
+) : UIView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0)) {
+    init {
+        layer.addSublayer(previewLayer)
+    }
+
+    override fun layoutSubviews() {
+        super.layoutSubviews()
+        previewLayer.frame = bounds
+    }
 }

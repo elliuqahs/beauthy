@@ -14,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -23,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -132,6 +135,20 @@ class AddAccountScreen : Screen {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                val fieldColors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                    focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                )
+
                 Text(
                     text = stringResource(Res.string.add_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
@@ -145,6 +162,7 @@ class AddAccountScreen : Screen {
                     placeholder = { Text(stringResource(Res.string.hint_issuer)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
+                    colors = fieldColors,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Words,
                         imeAction = ImeAction.Next
@@ -158,6 +176,7 @@ class AddAccountScreen : Screen {
                     placeholder = { Text(stringResource(Res.string.hint_account_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
+                    colors = fieldColors,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
@@ -168,6 +187,7 @@ class AddAccountScreen : Screen {
                     placeholder = { Text(stringResource(Res.string.hint_secret_key)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
+                    colors = fieldColors,
                     visualTransformation = if (secretVisible)
                         VisualTransformation.None
                     else
@@ -216,6 +236,7 @@ class AddAccountScreen : Screen {
                             readOnly = true,
                             label = { Text(stringResource(Res.string.label_key_type)) },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = typeDropdownExpanded) },
+                            colors = fieldColors,
                             modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                         )
                         ExposedDropdownMenu(
@@ -244,7 +265,11 @@ class AddAccountScreen : Screen {
                             screenModel.onIntent(
                                 AddAccountIntent.Submit(issuer, accountName, secret, selectedType)
                             )
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary
+                        )
                     ) {
                         Text(stringResource(Res.string.action_add_account))
                     }
