@@ -88,7 +88,11 @@ class AccountListScreen : Screen {
                     title = { Text(stringResource(Res.string.title_authenticator)) },
                     actions = {
                         IconButton(onClick = { navigator.push(ScanBarcodeScreen()) }) {
-                            Icon(Icons.Default.QrCodeScanner, contentDescription = stringResource(Res.string.cd_scan_qr))
+                            Icon(
+                                Icons.Default.QrCodeScanner,
+                                contentDescription = stringResource(Res.string.cd_scan_qr),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -97,7 +101,11 @@ class AccountListScreen : Screen {
                 )
             },
             floatingActionButton = {
-                FloatingActionButton(onClick = { navigator.push(AddAccountScreen()) }) {
+                FloatingActionButton(
+                    onClick = { navigator.push(AddAccountScreen()) },
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                ) {
                     Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.cd_add_account))
                 }
             }
@@ -177,6 +185,9 @@ private fun AccountCard(
                     "${item.account.issuer}, ${item.account.accountName}, $cdOtp, $cdRemaining"
                 }
             },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -250,7 +261,8 @@ private fun AccountCard(
                             color = if (remainingSeconds <= 5)
                                 MaterialTheme.colorScheme.error
                             else
-                                MaterialTheme.colorScheme.primary
+                                MaterialTheme.colorScheme.primary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant
                         )
                         Text(
                             text = "$remainingSeconds",

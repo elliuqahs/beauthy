@@ -37,7 +37,7 @@ import java.util.concurrent.Executors
 
 @Composable
 actual fun BarcodeScannerView(
-    onBarcodeScanned: (String) -> Unit,
+    onBarcodeScanned: (String) -> Boolean,
     onPermissionDenied: () -> Unit
 ) {
     val context = LocalContext.current
@@ -75,7 +75,7 @@ actual fun BarcodeScannerView(
 
 @Composable
 private fun CameraPreviewWithAnalysis(
-    onBarcodeScanned: (String) -> Unit
+    onBarcodeScanned: (String) -> Boolean
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -118,8 +118,8 @@ private fun CameraPreviewWithAnalysis(
                                             if (barcode.format == Barcode.FORMAT_QR_CODE) {
                                                 barcode.rawValue?.let { value ->
                                                     if (!scanned) {
-                                                        scanned = true
-                                                        onBarcodeScanned(value)
+                                                        val accepted = onBarcodeScanned(value)
+                                                        scanned = accepted
                                                     }
                                                 }
                                             }

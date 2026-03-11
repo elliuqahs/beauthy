@@ -78,10 +78,12 @@ class ScanBarcodeScreen : Screen {
                                 repository.addAccount(account)
                                 navigator.pop()
                             }
+                            true
                         } else {
                             scope.launch {
                                 snackbarHostState.showSnackbar(invalidQrMessage)
                             }
+                            false
                         }
                     },
                     onPermissionDenied = {
