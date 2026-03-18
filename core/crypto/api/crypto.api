@@ -1,0 +1,34 @@
+public final class com/maoungedev/beauthy/core/crypto/Base32 {
+	public static final field INSTANCE Lcom/maoungedev/beauthy/core/crypto/Base32;
+	public final fun decode (Ljava/lang/String;)[B
+	public final fun isValid (Ljava/lang/String;)Z
+}
+
+public final class com/maoungedev/beauthy/core/crypto/HmacAlgorithm : java/lang/Enum {
+	public static final field SHA1 Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static final field SHA256 Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static final field SHA512 Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static fun values ()[Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+}
+
+public abstract interface class com/maoungedev/beauthy/core/crypto/HmacProvider {
+	public abstract fun hmac (Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;[B[B)[B
+}
+
+public final class com/maoungedev/beauthy/core/crypto/JvmHmacProvider : com/maoungedev/beauthy/core/crypto/HmacProvider {
+	public fun <init> ()V
+	public fun hmac (Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;[B[B)[B
+}
+
+public final class com/maoungedev/beauthy/core/crypto/TotpGenerator {
+	public fun <init> (Lcom/maoungedev/beauthy/core/crypto/HmacProvider;)V
+	public final fun generate (Ljava/lang/String;JIILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;)Ljava/lang/String;
+	public static synthetic fun generate$default (Lcom/maoungedev/beauthy/core/crypto/TotpGenerator;Ljava/lang/String;JIILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun generateHotp (Ljava/lang/String;JILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;)Ljava/lang/String;
+	public static synthetic fun generateHotp$default (Lcom/maoungedev/beauthy/core/crypto/TotpGenerator;Ljava/lang/String;JILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun remainingSeconds (JI)I
+	public static synthetic fun remainingSeconds$default (Lcom/maoungedev/beauthy/core/crypto/TotpGenerator;JIILjava/lang/Object;)I
+}
+
