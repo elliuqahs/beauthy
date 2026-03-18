@@ -1,14 +1,36 @@
 package com.maoungedev.beauthy.core.crypto
 
+/**
+ * Base32 decoder following [RFC 4648](https://tools.ietf.org/html/rfc4648).
+ *
+ * Used to decode the shared secret from `otpauth://` URIs and manual user input.
+ * Supports the standard alphabet (`A-Z`, `2-7`), optional padding (`=`),
+ * spaces, and case-insensitive input.
+ */
 object Base32 {
     private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 
+    /**
+     * Checks whether [input] contains only valid Base32 characters.
+     *
+     * Spaces and padding (`=`) are stripped before validation.
+     *
+     * @param input the string to validate
+     * @return `true` if [input] is non-empty and contains only Base32 characters
+     */
     fun isValid(input: String): Boolean {
         val clean = input.uppercase().replace(" ", "").replace("=", "")
         if (clean.isEmpty()) return false
         return clean.all { it in ALPHABET }
     }
 
+    /**
+     * Decodes a Base32-encoded string to raw bytes.
+     *
+     * @param input Base32 string (case-insensitive, padding and spaces allowed)
+     * @return decoded byte array
+     * @throws IllegalArgumentException if [input] is empty or contains invalid characters
+     */
     fun decode(input: String): ByteArray {
         val clean = input.uppercase().replace(" ", "").trimEnd('=')
         require(clean.isNotEmpty()) { "Base32 input must not be empty" }

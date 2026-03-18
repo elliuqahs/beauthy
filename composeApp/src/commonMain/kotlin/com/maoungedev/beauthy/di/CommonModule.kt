@@ -13,6 +13,6 @@ import org.koin.dsl.module
 val commonModule = module {
     singleOf(::TotpGenerator)
     singleOf(::AccountRepositoryImpl) bind AccountRepository::class
-    factoryOf(::AccountListScreenModel)
+    factory { AccountListScreenModel(get(), get(), get(), get()) }
     factoryOf(::AddAccountScreenModel)
 }

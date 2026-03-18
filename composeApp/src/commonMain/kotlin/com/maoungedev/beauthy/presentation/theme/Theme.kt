@@ -13,6 +13,7 @@ private val MintGreen = Color(0xFF02C39A)
 // Background & surface
 private val DarkBackground = Color(0xFF0A1628)
 private val CardDark = Color(0xFF1A2D4A)
+val TimerTrack = Color(0xFF243B5C)
 
 // Text
 private val SlateGray = Color(0xFF64748B)

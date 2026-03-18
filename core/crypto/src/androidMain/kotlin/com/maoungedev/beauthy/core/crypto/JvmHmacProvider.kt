@@ -4,9 +4,15 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 class JvmHmacProvider : HmacProvider {
-    override fun hmacSha1(key: ByteArray, data: ByteArray): ByteArray {
-        val mac = Mac.getInstance("HmacSHA1")
-        mac.init(SecretKeySpec(key, "HmacSHA1"))
+
+    override fun hmac(algorithm: HmacAlgorithm, key: ByteArray, data: ByteArray): ByteArray {
+        val algoName = when (algorithm) {
+            HmacAlgorithm.SHA1 -> "HmacSHA1"
+            HmacAlgorithm.SHA256 -> "HmacSHA256"
+            HmacAlgorithm.SHA512 -> "HmacSHA512"
+        }
+        val mac = Mac.getInstance(algoName)
+        mac.init(SecretKeySpec(key, algoName))
         return mac.doFinal(data)
     }
 }

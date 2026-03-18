@@ -39,8 +39,7 @@ class Base32Test {
 
     @Test
     fun decode_knownVectors() {
-        // RFC 4648 test vectors
-        assertEquals("", Base32.decode("").decodeToString().ifEmpty { "" })
+        // RFC 4648 test vectors (empty string case covered in decode_emptyString_throws)
         assertEquals("f", Base32.decode("MY").decodeToString())
         assertEquals("fo", Base32.decode("MZXQ").decodeToString())
         assertEquals("foo", Base32.decode("MZXW6").decodeToString())

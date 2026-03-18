@@ -1,5 +1,6 @@
 package com.maoungedev.beauthy.presentation.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +16,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,12 +31,17 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,13 +65,17 @@ import beauthy.composeapp.generated.resources.cd_otp_code
 import beauthy.composeapp.generated.resources.cd_refresh_hotp
 import beauthy.composeapp.generated.resources.cd_remaining_seconds
 import beauthy.composeapp.generated.resources.cd_scan_qr
+import beauthy.composeapp.generated.resources.cd_search_accounts
+import beauthy.composeapp.generated.resources.cd_sort_accounts
 import beauthy.composeapp.generated.resources.dialog_delete_message
 import beauthy.composeapp.generated.resources.dialog_delete_title
 import beauthy.composeapp.generated.resources.empty_subtitle
 import beauthy.composeapp.generated.resources.empty_title
+import beauthy.composeapp.generated.resources.hint_search
 import beauthy.composeapp.generated.resources.key_type_hotp
 import beauthy.composeapp.generated.resources.key_type_totp
 import beauthy.composeapp.generated.resources.label_counter
+import beauthy.composeapp.generated.resources.snackbar_copied
 import beauthy.composeapp.generated.resources.title_authenticator
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -71,6 +84,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.maoungedev.beauthy.domain.model.OtpType
 import com.maoungedev.beauthy.presentation.add.AddAccountScreen
 import com.maoungedev.beauthy.presentation.scan.ScanBarcodeScreen
+import com.maoungedev.beauthy.presentation.theme.TimerTrack
 import org.jetbrains.compose.resources.stringResource
 
 class AccountListScreen : Screen {
@@ -81,12 +95,46 @@ class AccountListScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = koinScreenModel<AccountListScreenModel>()
         val uiState by screenModel.state.collectAsStateWithLifecycle()
+        val effect by screenModel.sideEffect.collectAsStateWithLifecycle()
+
+        val snackbarHostState = remember { SnackbarHostState() }
+        var searchVisible by remember { mutableStateOf(false) }
+
+        val copiedMessage = stringResource(Res.string.snackbar_copied)
+
+        LaunchedEffect(effect) {
+            when (effect) {
+                is AccountListSideEffect.CodeCopied -> {
+                    snackbarHostState.showSnackbar(copiedMessage)
+                    screenModel.onIntent(AccountListIntent.ConsumeSideEffect)
+                }
+                is AccountListSideEffect.Idle -> {}
+            }
+        }
 
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopAppBar(
                     title = { Text(stringResource(Res.string.title_authenticator)) },
                     actions = {
+                        IconButton(onClick = { searchVisible = !searchVisible }) {
+                            Icon(
+                                if (searchVisible) Icons.Default.Close else Icons.Default.Search,
+                                contentDescription = stringResource(Res.string.cd_search_accounts),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        IconButton(onClick = { screenModel.onIntent(AccountListIntent.ToggleSort) }) {
+                            Icon(
+                                Icons.Default.SortByAlpha,
+                                contentDescription = stringResource(Res.string.cd_sort_accounts),
+                                tint = if (uiState.sortOrder != SortOrder.NONE)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                         IconButton(onClick = { navigator.push(ScanBarcodeScreen()) }) {
                             Icon(
                                 Icons.Default.QrCodeScanner,
@@ -110,28 +158,42 @@ class AccountListScreen : Screen {
                 }
             }
         ) { padding ->
-            if (uiState.accounts.isEmpty()) {
-                EmptyState(modifier = Modifier.padding(padding))
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(uiState.accounts, key = { it.account.id }) { item ->
-                        AccountCard(
-                            item = item,
-                            remainingSeconds = uiState.remainingSeconds,
-                            progress = uiState.progress,
-                            onDelete = {
-                                screenModel.onIntent(AccountListIntent.DeleteAccount(item.account.id))
-                            },
-                            onRefreshHotp = {
-                                screenModel.onIntent(AccountListIntent.RefreshHotp(item.account.id))
-                            }
-                        )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                if (searchVisible) {
+                    SearchBar(
+                        query = uiState.searchQuery,
+                        onQueryChange = { screenModel.onIntent(AccountListIntent.SearchQuery(it)) }
+                    )
+                }
+
+                if (uiState.accounts.isEmpty()) {
+                    EmptyState(modifier = Modifier.weight(1f))
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(uiState.accounts, key = { it.account.id }) { item ->
+                            AccountCard(
+                                item = item,
+                                remainingSeconds = uiState.remainingSeconds,
+                                progress = uiState.progress,
+                                onCopyCode = {
+                                    screenModel.onIntent(AccountListIntent.CopyCode(item.code))
+                                },
+                                onDelete = {
+                                    screenModel.onIntent(AccountListIntent.DeleteAccount(item.account.id))
+                                },
+                                onRefreshHotp = {
+                                    screenModel.onIntent(AccountListIntent.RefreshHotp(item.account.id))
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -140,10 +202,56 @@ class AccountListScreen : Screen {
 }
 
 @Composable
+private fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        placeholder = { Text(stringResource(Res.string.hint_search)) },
+        singleLine = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedBorderColor = MaterialTheme.colorScheme.secondary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+            cursorColor = MaterialTheme.colorScheme.primary,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
+        leadingIcon = {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
 private fun AccountCard(
     item: AccountWithCode,
     remainingSeconds: Int,
     progress: Float,
+    onCopyCode: () -> Unit,
     onDelete: () -> Unit,
     onRefreshHotp: () -> Unit
 ) {
@@ -178,6 +286,7 @@ private fun AccountCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onCopyCode)
             .semantics(mergeDescendants = true) {
                 contentDescription = if (isHotp) {
                     "${item.account.issuer}, ${item.account.accountName}, $cdOtp, $typeLabel"
@@ -233,7 +342,6 @@ private fun AccountCard(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 if (isHotp) {
-                    // HOTP: Refresh button + counter
                     IconButton(
                         onClick = onRefreshHotp,
                         modifier = Modifier.size(48.dp)
@@ -251,7 +359,6 @@ private fun AccountCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 } else {
-                    // TOTP: Timer countdown
                     Box(contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(
                             progress = { progress },
@@ -262,7 +369,7 @@ private fun AccountCard(
                                 MaterialTheme.colorScheme.error
                             else
                                 MaterialTheme.colorScheme.primary,
-                            trackColor = MaterialTheme.colorScheme.surfaceVariant
+                            trackColor = TimerTrack
                         )
                         Text(
                             text = "$remainingSeconds",

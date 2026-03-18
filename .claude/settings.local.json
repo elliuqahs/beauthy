@@ -14,7 +14,19 @@
       "Bash(./gradlew compileDebugKotlinAndroid:*)",
       "Bash(./gradlew compileKotlinIosSimulatorArm64:*)",
       "Bash(./gradlew jvmTest:*)",
-      "Bash(./gradlew:*)"
+      "Bash(./gradlew:*)",
+      "Bash(kill 1970 1966 1956 1954)",
+      "Bash(xargs kill:*)",
+      "Read(//private/tmp/**)",
+      "Bash(jar xf:*)",
+      "Bash(find /tmp -path */cafe.adriel* -name *.kt)",
+      "Bash(mkdir -p /tmp/voyager-src)",
+      "Bash(find /tmp/voyager-src -name *.kt)",
+      "Bash(find ~/.gradle/caches -path *voyager-screenmodel* -name *sources*)",
+      "Bash(find /tmp/voyager-sm -name *.kt -exec grep -l PlatformMainDispatcher {})",
+      "Bash(2)",
+      "Bash(find ~/.gradle/caches -path *voyager-core-android*1.1.0-beta03*sources* -name *.jar)",
+      "Bash(find /Users/shaq/AndroidStudioProjects/Beauthy/composeApp/src -name App.kt -o -name MainActivity.kt -o -name *Application*)"
     ]
   }
 }

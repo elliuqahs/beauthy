@@ -35,6 +35,7 @@ kotlin {
             implementation(libs.camerax.lifecycle)
             implementation(libs.camerax.view)
             implementation(libs.mlkit.barcode)
+            implementation(libs.androidx.biometric)
         }
         commonMain.dependencies {
             implementation(projects.core.crypto)

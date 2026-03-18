@@ -6,5 +6,7 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Beauthy memerlukan akses kamera untuk memindai kode QR akun authenticator.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Beauthy menggunakan Face ID untuk melindungi akun authenticator Anda.</string>
 </dict>
 </plist>

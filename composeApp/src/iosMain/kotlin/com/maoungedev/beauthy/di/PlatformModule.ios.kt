@@ -1,5 +1,7 @@
 package com.maoungedev.beauthy.di
 
+import com.maoungedev.beauthy.core.clipboard.ClipboardService
+import com.maoungedev.beauthy.core.clipboard.IosClipboardService
 import com.maoungedev.beauthy.core.crypto.HmacProvider
 import com.maoungedev.beauthy.core.crypto.IosHmacProvider
 import com.maoungedev.beauthy.core.time.IosTimeProvider
@@ -15,4 +17,5 @@ actual fun platformModule(): Module = module {
     singleOf(::IosHmacProvider) bind HmacProvider::class
     singleOf(::IosTimeProvider) bind TimeProvider::class
     singleOf(::SecureFileAccountStorage) bind AccountStorage::class
+    singleOf(::IosClipboardService) bind ClipboardService::class
 }

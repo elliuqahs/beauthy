@@ -1,5 +1,7 @@
 package com.maoungedev.beauthy.di
 
+import com.maoungedev.beauthy.core.clipboard.AndroidClipboardService
+import com.maoungedev.beauthy.core.clipboard.ClipboardService
 import com.maoungedev.beauthy.core.crypto.HmacProvider
 import com.maoungedev.beauthy.core.crypto.JvmHmacProvider
 import com.maoungedev.beauthy.core.time.SystemTimeProvider
@@ -15,4 +17,5 @@ actual fun platformModule(): Module = module {
     singleOf(::JvmHmacProvider) bind HmacProvider::class
     singleOf(::SystemTimeProvider) bind TimeProvider::class
     single<AccountStorage> { EncryptedAccountStorage(get()) }
+    single<ClipboardService> { AndroidClipboardService(get()) }
 }

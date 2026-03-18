@@ -32,7 +32,7 @@ import beauthy.composeapp.generated.resources.logo
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.maoungedev.beauthy.presentation.list.AccountListScreen
+import com.maoungedev.beauthy.presentation.biometric.BiometricLockScreen
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -51,7 +51,7 @@ class SplashScreen : Screen {
         LaunchedEffect(Unit) {
             visible = true
             delay(1500)
-            navigator.replace(AccountListScreen())
+            navigator.replace(BiometricLockScreen())
         }
 
         Column(

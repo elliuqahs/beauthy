@@ -9,6 +9,10 @@
     <string name="cd_delete_account">Delete account</string>
     <string name="cd_remaining_seconds">%1$d seconds remaining</string>
     <string name="cd_otp_code">OTP code: %1$s</string>
+    <string name="cd_search_accounts">Search accounts</string>
+    <string name="cd_sort_accounts">Sort accounts</string>
+    <string name="hint_search">Search accounts…</string>
+    <string name="snackbar_copied">Code copied to clipboard</string>
     <string name="empty_title">No accounts yet</string>
     <string name="empty_subtitle">Tap + to add an account</string>
     <string name="dialog_delete_title">Delete Account</string>
@@ -42,6 +46,12 @@
     <string name="scan_invalid_qr">QR code is not a valid OTP format</string>
     <string name="scan_permission_required">Camera permission is required to scan QR code</string>
     <string name="scan_waiting_permission">Waiting for camera permission…</string>
+
+    <!-- Biometric -->
+    <string name="biometric_title">Unlock Beauthy</string>
+    <string name="biometric_subtitle">Authenticate to access your accounts</string>
+    <string name="biometric_failed">Authentication failed</string>
+    <string name="biometric_retry">Try Again</string>
 
     <!-- Validation -->
     <string name="error_issuer_empty">Issuer cannot be empty</string>

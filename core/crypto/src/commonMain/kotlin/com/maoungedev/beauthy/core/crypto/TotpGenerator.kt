@@ -1,28 +1,83 @@
 package com.maoungedev.beauthy.core.crypto
 
+/**
+ * Generates TOTP ([RFC 6238](https://tools.ietf.org/html/rfc6238)) and
+ * HOTP ([RFC 4226](https://tools.ietf.org/html/rfc4226)) one-time passwords.
+ *
+ * All cryptographic operations delegate to the injected [HmacProvider], so the
+ * generator itself is platform-independent and fully testable with fakes.
+ *
+ * Sensitive byte arrays (decoded key, counter bytes, HMAC output) are zeroed
+ * in `finally` blocks after each code generation.
+ *
+ * @param hmacProvider platform-specific HMAC implementation
+ */
 class TotpGenerator(
     private val hmacProvider: HmacProvider
 ) {
-    fun generate(secret: String, timestampMillis: Long, digits: Int = 6, period: Int = 30): String {
+
+    /**
+     * Generates a TOTP code for the given timestamp.
+     *
+     * @param secret Base32-encoded shared secret
+     * @param timestampMillis current time in milliseconds since Unix epoch
+     * @param digits number of OTP digits (default 6)
+     * @param period time step in seconds (default 30)
+     * @param algorithm HMAC algorithm to use (default [HmacAlgorithm.SHA1])
+     * @return zero-padded OTP string of length [digits]
+     */
+    fun generate(
+        secret: String,
+        timestampMillis: Long,
+        digits: Int = 6,
+        period: Int = 30,
+        algorithm: HmacAlgorithm = HmacAlgorithm.SHA1
+    ): String {
         val counter = timestampMillis / 1000L / period.toLong()
-        return generateByCounter(secret, counter, digits)
+        return generateByCounter(secret, counter, digits, algorithm)
     }
 
-    fun generateHotp(secret: String, counter: Long, digits: Int = 6): String {
-        return generateByCounter(secret, counter, digits)
+    /**
+     * Generates an HOTP code for the given counter value.
+     *
+     * @param secret Base32-encoded shared secret
+     * @param counter monotonically increasing counter
+     * @param digits number of OTP digits (default 6)
+     * @param algorithm HMAC algorithm to use (default [HmacAlgorithm.SHA1])
+     * @return zero-padded OTP string of length [digits]
+     */
+    fun generateHotp(
+        secret: String,
+        counter: Long,
+        digits: Int = 6,
+        algorithm: HmacAlgorithm = HmacAlgorithm.SHA1
+    ): String {
+        return generateByCounter(secret, counter, digits, algorithm)
     }
 
+    /**
+     * Returns the number of seconds remaining in the current TOTP period.
+     *
+     * @param timestampMillis current time in milliseconds since Unix epoch
+     * @param period time step in seconds (default 30)
+     * @return seconds remaining (1..[period])
+     */
     fun remainingSeconds(timestampMillis: Long, period: Int = 30): Int {
         val seconds = timestampMillis / 1000L
         return (period - (seconds % period)).toInt()
     }
 
-    private fun generateByCounter(secret: String, counter: Long, digits: Int): String {
+    private fun generateByCounter(
+        secret: String,
+        counter: Long,
+        digits: Int,
+        algorithm: HmacAlgorithm
+    ): String {
         val key = Base32.decode(secret)
         try {
             val counterBytes = counterToBytes(counter)
             try {
-                val hmac = hmacProvider.hmacSha1(key, counterBytes)
+                val hmac = hmacProvider.hmac(algorithm, key, counterBytes)
                 try {
                     return truncate(hmac, digits)
                 } finally {
