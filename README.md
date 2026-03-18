@@ -31,7 +31,7 @@
 
 Beauthy is a cross-platform two-factor authentication app that generates **TOTP** ([RFC 6238](https://tools.ietf.org/html/rfc6238)) and **HOTP** ([RFC 4226](https://tools.ietf.org/html/rfc4226)) one-time passwords. Built entirely with **Kotlin Multiplatform** and **Compose Multiplatform** — single codebase, native performance on Android & iOS.
 
-The cryptographic core (`core/crypto`) is a **standalone SDK** that can be used independently in any Kotlin project. See [Beauthy OTP SDK](#beauthy-otp-sdk) for details.
+The cryptographic core (`core`) is a **standalone SDK** that can be used independently in any Kotlin project. See [Beauthy OTP SDK](#beauthy-otp-sdk) for details.
 
 ## Table of Contents
 
@@ -87,7 +87,7 @@ The cryptographic core (`core/crypto`) is a **standalone SDK** that can be used 
 
 ```
 Beauthy/
-├── core/crypto/                  # Standalone OTP SDK (publishable)
+├── core/                  # Standalone OTP SDK (publishable)
 │   └── src/
 │       ├── commonMain/           Base32, TotpGenerator, HmacProvider
 │       ├── androidMain/          JvmHmacProvider (javax.crypto)
@@ -176,7 +176,7 @@ Secret (Base32)  +  Current Time
 
 ## Beauthy OTP SDK
 
-The `core/crypto` module is a **standalone Kotlin Multiplatform library** for generating TOTP/HOTP codes. It has zero dependencies on the app module and can be used in any Kotlin project.
+The `core` module is a **standalone Kotlin Multiplatform library** for generating TOTP/HOTP codes. It has zero dependencies on the app module and can be used in any Kotlin project.
 
 ```kotlin
 implementation("com.beauthy:otp-sdk:1.0.0")
@@ -190,7 +190,7 @@ val code = generator.generate(
 )
 ```
 
-For full documentation, API reference, and more examples, see the **[OTP SDK README](core/crypto/README.md)**.
+For full documentation, API reference, and more examples, see the **[OTP SDK README](core/README.md)**.
 
 ## Build & Run
 
@@ -214,11 +214,11 @@ All business logic tests are in `commonTest` — no emulator or device required.
 
 ```bash
 # Run all tests
-./gradlew :core:crypto:allTests
+./gradlew :core:allTests
 ./gradlew :composeApp:testDebugUnitTest
 
 # Run specific test class
-./gradlew :core:crypto:testDebugUnitTest --tests "*.TotpGeneratorTest"
+./gradlew :core:testDebugUnitTest --tests "*.TotpGeneratorTest"
 ./gradlew :composeApp:testDebugUnitTest --tests "*.AccountListScreenModelTest"
 ```
 
@@ -235,7 +235,7 @@ All business logic tests are in `commonTest` — no emulator or device required.
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/my-feature`
 3. Make your changes and add tests
-4. Ensure all tests pass: `./gradlew :core:crypto:allTests :composeApp:testDebugUnitTest`
+4. Ensure all tests pass: `./gradlew :core:allTests :composeApp:testDebugUnitTest`
 5. Commit with a descriptive message
 6. Open a Pull Request
 

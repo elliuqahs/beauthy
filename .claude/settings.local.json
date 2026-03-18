@@ -26,7 +26,11 @@
       "Bash(find /tmp/voyager-sm -name *.kt -exec grep -l PlatformMainDispatcher {})",
       "Bash(2)",
       "Bash(find ~/.gradle/caches -path *voyager-core-android*1.1.0-beta03*sources* -name *.jar)",
-      "Bash(find /Users/shaq/AndroidStudioProjects/Beauthy/composeApp/src -name App.kt -o -name MainActivity.kt -o -name *Application*)"
+      "Bash(find /Users/shaq/AndroidStudioProjects/Beauthy/composeApp/src -name App.kt -o -name MainActivity.kt -o -name *Application*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git mv:*)"
     ]
   }
 }

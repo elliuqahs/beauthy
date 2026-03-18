@@ -9,7 +9,7 @@
   <a href="https://kotlinlang.org/docs/multiplatform.html"><img src="https://img.shields.io/badge/Kotlin_Multiplatform-2.3.0-7F52FF.svg?style=flat&logo=kotlin&logoColor=white" alt="KMP"/></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-24+-34A853.svg?style=flat&logo=android&logoColor=white" alt="Android"/></a>
   <a href="https://developer.apple.com/ios/"><img src="https://img.shields.io/badge/iOS-16+-000000.svg?style=flat&logo=apple&logoColor=white" alt="iOS"/></a>
-  <a href="../../LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat" alt="License"/></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat" alt="License"/></a>
 </p>
 
 ---
@@ -177,11 +177,11 @@ Tests use pre-computed HMAC values from the RFC 6238 test vectors — no real cr
 
 ```bash
 # Run all tests (Android + iOS Simulator)
-./gradlew :core:crypto:allTests
+./gradlew :core:allTests
 
 # Run specific test class
-./gradlew :core:crypto:testDebugUnitTest --tests "*.Base32Test"
-./gradlew :core:crypto:testDebugUnitTest --tests "*.TotpGeneratorTest"
+./gradlew :core:testDebugUnitTest --tests "*.Base32Test"
+./gradlew :core:testDebugUnitTest --tests "*.TotpGeneratorTest"
 
 # Verify API compatibility
 ./gradlew apiCheck

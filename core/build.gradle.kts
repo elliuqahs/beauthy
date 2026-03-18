@@ -53,7 +53,7 @@ android {
 
 publishing {
     publications.withType<MavenPublication> {
-        artifactId = if (artifactId == "crypto") "otp-sdk" else artifactId.replace("crypto", "otp-sdk")
+        artifactId = if (artifactId == "core") "otp-sdk" else artifactId.replace("core", "otp-sdk")
 
         pom {
             name.set("Beauthy OTP SDK")
