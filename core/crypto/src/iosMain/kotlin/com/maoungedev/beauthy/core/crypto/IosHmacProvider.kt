@@ -11,7 +11,7 @@ import platform.CoreCrypto.kCCHmacAlgSHA1
 import platform.CoreCrypto.kCCHmacAlgSHA256
 import platform.CoreCrypto.kCCHmacAlgSHA512
 
-class IosHmacProvider : HmacProvider {
+public class IosHmacProvider : HmacProvider {
 
     @OptIn(ExperimentalForeignApi::class)
     override fun hmac(algorithm: HmacAlgorithm, key: ByteArray, data: ByteArray): ByteArray {

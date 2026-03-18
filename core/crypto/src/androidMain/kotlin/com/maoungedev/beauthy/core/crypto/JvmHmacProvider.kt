@@ -3,7 +3,7 @@ package com.maoungedev.beauthy.core.crypto
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-class JvmHmacProvider : HmacProvider {
+public class JvmHmacProvider : HmacProvider {
 
     override fun hmac(algorithm: HmacAlgorithm, key: ByteArray, data: ByteArray): ByteArray {
         val algoName = when (algorithm) {

@@ -12,7 +12,7 @@ package com.maoungedev.beauthy.core.crypto
  *
  * @param hmacProvider platform-specific HMAC implementation
  */
-class TotpGenerator(
+public class TotpGenerator(
     private val hmacProvider: HmacProvider
 ) {
 
@@ -26,7 +26,7 @@ class TotpGenerator(
      * @param algorithm HMAC algorithm to use (default [HmacAlgorithm.SHA1])
      * @return zero-padded OTP string of length [digits]
      */
-    fun generate(
+    public fun generate(
         secret: String,
         timestampMillis: Long,
         digits: Int = 6,
@@ -46,7 +46,7 @@ class TotpGenerator(
      * @param algorithm HMAC algorithm to use (default [HmacAlgorithm.SHA1])
      * @return zero-padded OTP string of length [digits]
      */
-    fun generateHotp(
+    public fun generateHotp(
         secret: String,
         counter: Long,
         digits: Int = 6,
@@ -62,7 +62,7 @@ class TotpGenerator(
      * @param period time step in seconds (default 30)
      * @return seconds remaining (1..[period])
      */
-    fun remainingSeconds(timestampMillis: Long, period: Int = 30): Int {
+    public fun remainingSeconds(timestampMillis: Long, period: Int = 30): Int {
         val seconds = timestampMillis / 1000L
         return (period - (seconds % period)).toInt()
     }

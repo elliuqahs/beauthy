@@ -7,7 +7,7 @@ package com.maoungedev.beauthy.core.crypto
  * Supports the standard alphabet (`A-Z`, `2-7`), optional padding (`=`),
  * spaces, and case-insensitive input.
  */
-object Base32 {
+public object Base32 {
     private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 
     /**
@@ -18,7 +18,7 @@ object Base32 {
      * @param input the string to validate
      * @return `true` if [input] is non-empty and contains only Base32 characters
      */
-    fun isValid(input: String): Boolean {
+    public fun isValid(input: String): Boolean {
         val clean = input.uppercase().replace(" ", "").replace("=", "")
         if (clean.isEmpty()) return false
         return clean.all { it in ALPHABET }
@@ -31,7 +31,7 @@ object Base32 {
      * @return decoded byte array
      * @throws IllegalArgumentException if [input] is empty or contains invalid characters
      */
-    fun decode(input: String): ByteArray {
+    public fun decode(input: String): ByteArray {
         val clean = input.uppercase().replace(" ", "").trimEnd('=')
         require(clean.isNotEmpty()) { "Base32 input must not be empty" }
         require(clean.all { it in ALPHABET }) { "Invalid Base32 character in input" }
