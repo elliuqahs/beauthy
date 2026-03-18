@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="composeApp/src/commonMain/composeResources/drawable/logo.png" width="100" />
-</p>
+<img width="1358" height="764" alt="image" src="https://github.com/user-attachments/assets/945900b5-5ba4-437c-8617-f469b7a86385" />
+
 
 <h1 align="center">Beauthy</h1>
 
