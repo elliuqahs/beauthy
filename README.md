@@ -1,103 +1,90 @@
 <img width="1086" height="360" alt="image" src="https://github.com/user-attachments/assets/b7f3e278-f5f7-45f8-9748-32306ce8e04e" />
 
 
-<h1 align="center">Beauthy</h1>
+<h1 align="center">Beauthy OTP SDK</h1>
 
-<p align="center"><b>Be Authentic. Be Secure. Be Everywhere.</b></p>
-
-<p align="center">Cross-platform two-factor authenticator app generating TOTP & HOTP codes, built with Kotlin Multiplatform and Compose Multiplatform.</p>
+<p align="center">A lightweight Kotlin Multiplatform library for generating TOTP & HOTP one-time passwords.</p>
 
 <p align="center">
   <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.3.0-7F52FF.svg?style=flat&logo=kotlin&logoColor=white"/></a>
-  <a href="https://www.jetbrains.com/compose-multiplatform/"><img src="https://img.shields.io/badge/Compose_MP-1.10.0-4285F4.svg?style=flat&logo=jetpackcompose&logoColor=white"/></a>
+  <a href="https://kotlinlang.org/docs/multiplatform.html"><img src="https://img.shields.io/badge/Kotlin_Multiplatform-orange.svg?style=flat&logo=kotlin&logoColor=white"/></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-24+-34A853.svg?style=flat&logo=android&logoColor=white"/></a>
   <a href="https://developer.apple.com/ios/"><img src="https://img.shields.io/badge/iOS-16+-000000.svg?style=flat&logo=apple&logoColor=white"/></a>
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat"/>
 </p>
 
-<!-- screenshots here
-<p align="center">
-  <img src="docs/screenshots/android_list.png" width="250"/>
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/android_add.png" width="250"/>
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/ios_list.png" width="250"/>
-</p>
--->
-
 ---
 
-## Features
+RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (RFC 4226)](https://tools.ietf.org/html/rfc4226) implementation supporting SHA-1, SHA-256, and SHA-512. Zero third-party dependencies — uses only platform-native cryptography.
 
-- **TOTP & HOTP** — RFC 6238 / RFC 4226 compliant, SHA-1/256/512
-- **QR Code Scan** — Add accounts instantly via camera
-- **Encrypted Storage** — AES-256-GCM (Android) / NSFileProtection (iOS)
-- **Biometric Lock** — Fingerprint & Face ID on app launch
-- **Copy OTP** — Tap to copy, auto-clear clipboard after 30s
-- **Search & Sort** — Filter by issuer or account name
-- **Dark Theme** — Material3 dark mode
-- **Standalone SDK** — `core` module usable as independent library
+## Download
 
-## Tech Stack
-
-| Category | Library | Version |
-|----------|---------|---------|
-| Language | Kotlin Multiplatform | 2.3.0 |
-| UI | Compose Multiplatform + Material3 | 1.10.0 |
-| DI | Koin | 4.0.4 |
-| Navigation | Voyager | 1.1.0-beta03 |
-| QR Scan | CameraX + ML Kit / AVFoundation | 1.4.2 |
-| Storage | EncryptedSharedPreferences / NSFileProtection | — |
-
-## Architecture
-
-Clean Architecture + MVI — shared business logic, platform code injected via Koin.
-
-```
-┌─────────────────────────────────────────┐
-│  Presentation (MVI)                     │
-│  Voyager Screens + ScreenModels         │
-├─────────────────────────────────────────┤
-│  Domain                                 │
-│  OtpAccount, AccountRepository          │
-├─────────────────────────────────────────┤
-│  Data                                   │
-│  RepositoryImpl, AccountDto, Storage    │
-├──────────────────┬──────────────────────┤
-│  Android         │  iOS                 │
-│  EncryptedSP     │  NSFileProtection    │
-│  CameraX/MLKit   │  AVFoundation        │
-│  BiometricPrompt │  LAContext           │
-└──────────────────┴──────────────────────┘
+```gradle
+implementation("com.beauthy:otp-sdk:0.1.0")
 ```
 
-## Beauthy OTP SDK
-
-The `core` module is a standalone KMP library for TOTP/HOTP generation — zero app dependencies, publishable to Maven Central. Full docs at **[core/README.md](core/README.md)**.
+## Usage
 
 ```kotlin
-implementation("com.beauthy:otp-sdk:1.0.0")
+val generator = TotpGenerator(JvmHmacProvider()) // or IosHmacProvider()
 ```
 
+### TOTP
+
 ```kotlin
-val generator = TotpGenerator(JvmHmacProvider())
 val code = generator.generate(secret = "JBSWY3DPEHPK3PXP", timestampMillis = System.currentTimeMillis())
+val remaining = generator.remainingSeconds(System.currentTimeMillis()) // seconds until next code
 ```
 
-## Build & Run
+### TOTP with SHA-256
 
-```bash
-./gradlew composeApp:assembleDebug          # Build Android APK
-./gradlew composeApp:installDebug           # Run on device/emulator
-./gradlew composeApp:compileKotlinIosSimulatorArm64  # iOS compile check
-# iOS: open iosApp/iosApp.xcodeproj → Run
+```kotlin
+val code = generator.generate(
+    secret = "JBSWY3DPEHPK3PXP",
+    timestampMillis = System.currentTimeMillis(),
+    algorithm = HmacAlgorithm.SHA256
+)
 ```
+
+### HOTP
+
+```kotlin
+val code = generator.generateHotp(secret = "JBSWY3DPEHPK3PXP", counter = 42)
+```
+
+### Validate Base32
+
+```kotlin
+if (Base32.isValid(userInput)) {
+    val bytes = Base32.decode(userInput)
+}
+```
+
+## Supported Platforms
+
+| Platform | HMAC Backend |
+|----------|-------------|
+| Android (minSdk 24) | `javax.crypto.Mac` |
+| iOS (arm64, simulatorArm64) | CoreCrypto `CCHmac` |
+
+## Find this library useful?
+
+Support it by joining __[stargazers](https://github.com/elliuqahs/beauthy/stargazers)__ for this repository. :star:
 
 ## License
 
 ```
 Copyright 2025 Beauthy
 
-Licensed under the Apache License, Version 2.0
-http://www.apache.org/licenses/LICENSE-2.0
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```
