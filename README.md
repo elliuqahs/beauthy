@@ -1,11 +1,12 @@
 <img width="1086" height="360" alt="image" src="https://github.com/user-attachments/assets/b7f3e278-f5f7-45f8-9748-32306ce8e04e" />
 
 
-<h1 align="center">Beauthy OTP SDK</h1>
+<h1 align="center">Beauthy SDK</h1>
 
 <p align="center">A lightweight Kotlin Multiplatform library for generating TOTP & HOTP one-time passwords.</p>
 
 <p align="center">
+  <a href="https://central.sonatype.com/artifact/io.github.elliuqahs/beauthy-sdk"><img src="https://img.shields.io/maven-central/v/io.github.elliuqahs/beauthy-sdk.svg?style=flat&label=Maven%20Central&color=blue" alt="Maven Central"/></a>
   <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.3.0-7F52FF.svg?style=flat&logo=kotlin&logoColor=white"/></a>
   <a href="https://kotlinlang.org/docs/multiplatform.html"><img src="https://img.shields.io/badge/Kotlin_Multiplatform-orange.svg?style=flat&logo=kotlin&logoColor=white"/></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-24+-34A853.svg?style=flat&logo=android&logoColor=white"/></a>
@@ -20,7 +21,7 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 ## Download
 
 ```gradle
-implementation("com.beauthy:otp-sdk:0.1.0")
+implementation("io.github.elliuqahs:beauthy-sdk:0.1.0")
 ```
 
 ## Usage
