@@ -8,10 +8,6 @@
 
 <p align="center">
   <a href="https://central.sonatype.com/artifact/io.github.elliuqahs/beauthy-sdk"><img src="https://img.shields.io/maven-central/v/io.github.elliuqahs/beauthy-sdk.svg?style=flat&label=Maven%20Central&color=blue" alt="Maven Central"/></a>
-  <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.3.0-7F52FF.svg?style=flat&logo=kotlin&logoColor=white"/></a>
-  <a href="https://kotlinlang.org/docs/multiplatform.html"><img src="https://img.shields.io/badge/Kotlin_Multiplatform-orange.svg?style=flat&logo=kotlin&logoColor=white"/></a>
-  <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-24+-34A853.svg?style=flat&logo=android&logoColor=white"/></a>
-  <a href="https://developer.apple.com/ios/"><img src="https://img.shields.io/badge/iOS-16+-000000.svg?style=flat&logo=apple&logoColor=white"/></a>
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat"/>
 </p>
 
