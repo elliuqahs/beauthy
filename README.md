@@ -20,24 +20,9 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 
 ## Download
 
-Add the dependency to your `build.gradle.kts`:
-
-**Kotlin Multiplatform** — add to `commonMain`:
-```kotlin
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation("io.github.elliuqahs:beauthy-sdk:0.1.0")
-        }
-    }
-}
+```gradle
+implementation("io.github.elliuqahs:beauthy-sdk:0.1.0")
 ```
-
-**Android only:**
-```kotlin
-dependencies {
-    implementation("io.github.elliuqahs:beauthy-sdk-android:0.1.0")
-}
 
 ## Usage
 
@@ -78,11 +63,10 @@ if (Base32.isValid(userInput)) {
 
 ## Supported Platforms
 
-| Platform | Target | Artifact | HMAC Backend |
-|----------|--------|----------|-------------|
-| Android | `androidTarget` (minSdk 24) | `beauthy-sdk-android` | `javax.crypto.Mac` |
-| iOS | `iosArm64` | `beauthy-sdk-iosarm64` | CoreCrypto `CCHmac` |
-| iOS Simulator | `iosSimulatorArm64` | `beauthy-sdk-iossimulatorarm64` | CoreCrypto `CCHmac` |
+| Platform | HMAC Backend |
+|----------|-------------|
+| Android (minSdk 24) | `javax.crypto.Mac` |
+| iOS (arm64, simulatorArm64) | CoreCrypto `CCHmac` |
 
 ## Find this library useful?
 
