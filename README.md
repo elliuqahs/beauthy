@@ -20,46 +20,74 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 
 ## Download
 
-```gradle
-implementation("io.github.elliuqahs:beauthy-sdk:0.1.0")
+<details open>
+<summary><b>Kotlin Multiplatform</b></summary>
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("io.github.elliuqahs:beauthy-sdk:0.1.0")
+        }
+    }
+}
 ```
+
+</details>
+
+<details>
+<summary><b>Android Only (non-KMP)</b></summary>
+
+```kotlin
+dependencies {
+    implementation("io.github.elliuqahs:beauthy-sdk-android:0.1.0")
+}
+```
+
+</details>
 
 ## Usage
 
-```kotlin
-val generator = TotpGenerator(JvmHmacProvider()) // or IosHmacProvider()
-```
-
-### TOTP
+### Android / KMP Android target
 
 ```kotlin
+import com.maoungedev.beauthy.core.crypto.*
+
+val generator = TotpGenerator(JvmHmacProvider())
+
+// TOTP (SHA-1, 6 digits, 30s)
 val code = generator.generate(secret = "JBSWY3DPEHPK3PXP", timestampMillis = System.currentTimeMillis())
-val remaining = generator.remainingSeconds(System.currentTimeMillis()) // seconds until next code
-```
+val remaining = generator.remainingSeconds(System.currentTimeMillis())
 
-### TOTP with SHA-256
-
-```kotlin
-val code = generator.generate(
+// TOTP with SHA-256
+val code256 = generator.generate(
     secret = "JBSWY3DPEHPK3PXP",
     timestampMillis = System.currentTimeMillis(),
     algorithm = HmacAlgorithm.SHA256
 )
-```
 
-### HOTP
+// HOTP
+val hotp = generator.generateHotp(secret = "JBSWY3DPEHPK3PXP", counter = 42)
 
-```kotlin
-val code = generator.generateHotp(secret = "JBSWY3DPEHPK3PXP", counter = 42)
-```
-
-### Validate Base32
-
-```kotlin
+// Validate Base32
 if (Base32.isValid(userInput)) {
     val bytes = Base32.decode(userInput)
 }
 ```
+
+### iOS / KMP iOS target
+
+```kotlin
+import com.maoungedev.beauthy.core.crypto.*
+
+val generator = TotpGenerator(IosHmacProvider())
+
+// Same API as Android
+val code = generator.generate(secret = "JBSWY3DPEHPK3PXP", timestampMillis = getCurrentTimeMillis())
+val remaining = generator.remainingSeconds(getCurrentTimeMillis())
+```
+
+> The only difference is the `HmacProvider` — use `JvmHmacProvider()` on Android and `IosHmacProvider()` on iOS. All other APIs are identical.
 
 ## Supported Platforms
 
