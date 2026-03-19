@@ -1,4 +1,5 @@
-<img width="1086" height="360" alt="image" src="https://github.com/user-attachments/assets/b7f3e278-f5f7-45f8-9748-32306ce8e04e" />
+<img width="1088" height="316" alt="image" src="https://github.com/user-attachments/assets/d691d67e-ab19-4624-abcf-1e1709d61a5d" />
+
 
 
 <h1 align="center">Beauthy SDK</h1>
