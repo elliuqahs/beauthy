@@ -17,3 +17,8 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# Local tooling (Claude Code, graphify)
+graphify-out/
+.claude/
+CLAUDE.md
