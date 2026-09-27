@@ -23,11 +23,13 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 
 - **TOTP and HOTP** with SHA-1, SHA-256 and SHA-512, 6 to 9 digits, and any period
 - **Ready for display**: the code, a formatted version, the countdown and progress from one call
+- **Live updates** (optional `beauthy-sdk-coroutines`): a `Flow` that ticks every second
 - **Verification** with a clock-drift window (TOTP) or look-ahead (HOTP), using constant-time comparison
 - **`otpauth://` URIs**: parse authenticator QR codes and build them for enrollment
 - **Secret generation** from the platform's secure random source
 - **Base32** encoding and decoding
 - **Common API**: no platform-specific setup, everything works from `commonMain`
+- **No dependencies** in `beauthy-sdk` beyond the Kotlin standard library
 - Tested against the RFC 4226 and RFC 6238 test vectors on Android, JVM and iOS
 
 ## Download
@@ -40,6 +42,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation("io.github.elliuqahs:beauthy-sdk:0.2.0")
+
+            // Optional: live codes as a Flow
+            implementation("io.github.elliuqahs:beauthy-sdk-coroutines:0.2.0")
         }
     }
 }
@@ -92,18 +97,16 @@ val hotpCode = hotp.generate(counter = 42)
 
 ### Display a live code
 
-A code is valid for one period (30 seconds by default). `current()` returns the code with its countdown and progress, all computed from the same instant, so call it once a second to keep a screen up to date. The code changes on its own when a new period starts.
+A code is valid for one period (30 seconds by default). `current()` returns the code with its countdown and progress, all computed from the same instant.
+
+With `beauthy-sdk-coroutines`, `codes()` turns that into a `Flow` that emits at the start of every second, so the countdown ticks with the clock and the code changes as soon as a new period begins:
 
 ```kotlin
 class AccountViewModel(secret: String) : ViewModel() {
     private val totp = Totp(secret)
 
-    val code: StateFlow<TotpCode> = flow {
-        while (true) {
-            emit(totp.current())
-            delay(1000)
-        }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), totp.current())
+    val code: StateFlow<TotpCode> = totp.codes()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), totp.current())
 }
 
 @Composable
@@ -115,7 +118,7 @@ fun AccountRow(viewModel: AccountViewModel) {
 }
 ```
 
-If you only need to refresh when the code changes, wait until `current.expiresAtMillis` instead of polling every second.
+Without coroutines, call `current()` once a second yourself, or schedule the next refresh for `current.expiresAtMillis` if you only need to know when the code changes.
 
 ### Scan a QR code
 

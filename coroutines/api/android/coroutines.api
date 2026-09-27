@@ -1,0 +1,4 @@
+public final class io/github/elliuqahs/beauthy/coroutines/TotpFlowKt {
+	public static final fun codes (Lio/github/elliuqahs/beauthy/Totp;)Lkotlinx/coroutines/flow/Flow;
+}
+

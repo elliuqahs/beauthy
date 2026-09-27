@@ -6,6 +6,7 @@ package io.github.elliuqahs.beauthy.samples
 fun main() {
     val samples = listOf(
         "Basic TOTP" to ::basicTotpSample,
+        "Live code (coroutines)" to ::liveCodeSample,
         "Custom algorithm" to ::customAlgorithmSample,
         "HOTP" to ::hotpSample,
         "otpauth:// URIs" to ::otpAuthUriSample,

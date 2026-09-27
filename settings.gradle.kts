@@ -29,4 +29,5 @@ dependencyResolutionManagement {
 }
 
 include(":core")
+include(":coroutines")
 include(":samples")

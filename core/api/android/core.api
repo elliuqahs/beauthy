@@ -126,6 +126,7 @@ public final class io/github/elliuqahs/beauthy/TotpCode {
 	public final fun getPeriod ()I
 	public final fun getProgress ()F
 	public final fun getRemainingSeconds ()I
+	public final fun getTimestampMillis ()J
 	public final fun getValidFromMillis ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

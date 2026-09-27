@@ -22,7 +22,8 @@ public class TotpCode internal constructor(
     public val validFromMillis: Long,
     /** End of the time step (exclusive); the next code starts at this instant. */
     public val expiresAtMillis: Long,
-    private val timestampMillis: Long
+    /** The instant this snapshot describes; [remainingSeconds] and [progress] are relative to it. */
+    public val timestampMillis: Long
 ) {
     /** Length of the time step in seconds. */
     public val period: Int

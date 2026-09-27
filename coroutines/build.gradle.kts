@@ -1,6 +1,5 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -11,16 +10,6 @@ plugins {
 
 kotlin {
     explicitApi()
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    applyDefaultHierarchyTemplate {
-        common {
-            group("jvmAndAndroid") {
-                withJvm()
-                withAndroidTarget()
-            }
-        }
-    }
 
     androidTarget {
         compilerOptions {
@@ -35,26 +24,24 @@ kotlin {
         }
     }
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-        iosX64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "CoreCrypto"
-            isStatic = true
-        }
-    }
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
 
     sourceSets {
+        commonMain.dependencies {
+            api(projects.core)
+            api(libs.kotlinx.coroutines.core)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
 
 android {
-    namespace = "io.github.elliuqahs.beauthy.sdk"
+    namespace = "io.github.elliuqahs.beauthy.coroutines"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -68,11 +55,11 @@ android {
 }
 
 mavenPublishing {
-    coordinates(artifactId = "beauthy-sdk")
+    coordinates(artifactId = "beauthy-sdk-coroutines")
     configure(KotlinMultiplatform(javadocJar = JavadocJar.Empty()))
 
     pom {
-        name.set("Beauthy SDK")
-        description.set("Lightweight Kotlin Multiplatform library for generating TOTP and HOTP one-time passwords")
+        name.set("Beauthy SDK Coroutines")
+        description.set("Kotlin Coroutines extensions for Beauthy SDK: live TOTP codes as a Flow")
     }
 }
