@@ -1,5 +1,6 @@
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -24,10 +25,20 @@ plugins {
 }
 
 group = "io.github.elliuqahs"
-version = "0.1.0"
+version = "0.2.0"
 
 kotlin {
     explicitApi()
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        common {
+            group("jvmAndAndroid") {
+                withJvm()
+                withAndroidTarget()
+            }
+        }
+    }
 
     androidTarget {
         compilerOptions {
@@ -36,9 +47,16 @@ kotlin {
         publishLibraryVariants("release")
     }
 
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
+        iosX64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "CoreCrypto"
@@ -71,7 +89,7 @@ mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
 
-    coordinates("io.github.elliuqahs", "beauthy-sdk", "0.1.0")
+    coordinates("io.github.elliuqahs", "beauthy-sdk", version.toString())
 
     configure(KotlinMultiplatform(javadocJar = com.vanniktech.maven.publish.JavadocJar.Empty()))
 
