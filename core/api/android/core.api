@@ -1,0 +1,117 @@
+public final class com/maoungedev/beauthy/core/crypto/Base32 {
+	public static final field INSTANCE Lcom/maoungedev/beauthy/core/crypto/Base32;
+	public final fun decode (Ljava/lang/String;)[B
+	public final fun isValid (Ljava/lang/String;)Z
+}
+
+public final class com/maoungedev/beauthy/core/crypto/HmacAlgorithm : java/lang/Enum {
+	public static final field SHA1 Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static final field SHA256 Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static final field SHA512 Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+	public static fun values ()[Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;
+}
+
+public abstract interface class com/maoungedev/beauthy/core/crypto/HmacProvider {
+	public abstract fun hmac (Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;[B[B)[B
+}
+
+public final class com/maoungedev/beauthy/core/crypto/JvmHmacProvider : com/maoungedev/beauthy/core/crypto/HmacProvider {
+	public fun <init> ()V
+	public fun hmac (Lcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;[B[B)[B
+}
+
+public final class com/maoungedev/beauthy/core/crypto/TotpGenerator {
+	public fun <init> (Lcom/maoungedev/beauthy/core/crypto/HmacProvider;)V
+	public final fun generate (Ljava/lang/String;JIILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;)Ljava/lang/String;
+	public static synthetic fun generate$default (Lcom/maoungedev/beauthy/core/crypto/TotpGenerator;Ljava/lang/String;JIILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun generateHotp (Ljava/lang/String;JILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;)Ljava/lang/String;
+	public static synthetic fun generateHotp$default (Lcom/maoungedev/beauthy/core/crypto/TotpGenerator;Ljava/lang/String;JILcom/maoungedev/beauthy/core/crypto/HmacAlgorithm;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun remainingSeconds (JI)I
+	public static synthetic fun remainingSeconds$default (Lcom/maoungedev/beauthy/core/crypto/TotpGenerator;JIILjava/lang/Object;)I
+}
+
+public final class io/github/elliuqahs/beauthy/Base32 {
+	public static final field INSTANCE Lio/github/elliuqahs/beauthy/Base32;
+	public final fun decode (Ljava/lang/String;)[B
+	public final fun encode ([BZ)Ljava/lang/String;
+	public static synthetic fun encode$default (Lio/github/elliuqahs/beauthy/Base32;[BZILjava/lang/Object;)Ljava/lang/String;
+	public final fun isValid (Ljava/lang/String;)Z
+}
+
+public final class io/github/elliuqahs/beauthy/HmacAlgorithm : java/lang/Enum {
+	public static final field SHA1 Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public static final field SHA256 Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public static final field SHA512 Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public final fun getDigestLength ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public static fun values ()[Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+}
+
+public final class io/github/elliuqahs/beauthy/Hotp {
+	public fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;I)V
+	public synthetic fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun generate (J)Ljava/lang/String;
+	public final fun getAlgorithm ()Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public final fun getDigits ()I
+	public final fun verify (Ljava/lang/String;JI)Ljava/lang/Long;
+	public static synthetic fun verify$default (Lio/github/elliuqahs/beauthy/Hotp;Ljava/lang/String;JIILjava/lang/Object;)Ljava/lang/Long;
+}
+
+public final class io/github/elliuqahs/beauthy/OtpAuthUri {
+	public static final field Companion Lio/github/elliuqahs/beauthy/OtpAuthUri$Companion;
+	public fun <init> (Lio/github/elliuqahs/beauthy/OtpType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIJ)V
+	public synthetic fun <init> (Lio/github/elliuqahs/beauthy/OtpType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccountName ()Ljava/lang/String;
+	public final fun getAlgorithm ()Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public final fun getCounter ()J
+	public final fun getDigits ()I
+	public final fun getIssuer ()Ljava/lang/String;
+	public final fun getPeriod ()I
+	public final fun getSecret ()Ljava/lang/String;
+	public final fun getType ()Lio/github/elliuqahs/beauthy/OtpType;
+	public fun hashCode ()I
+	public final fun toHotp ()Lio/github/elliuqahs/beauthy/Hotp;
+	public fun toString ()Ljava/lang/String;
+	public final fun toTotp ()Lio/github/elliuqahs/beauthy/Totp;
+	public final fun toUriString ()Ljava/lang/String;
+}
+
+public final class io/github/elliuqahs/beauthy/OtpAuthUri$Companion {
+	public final fun parse (Ljava/lang/String;)Lio/github/elliuqahs/beauthy/OtpAuthUri;
+	public final fun parseOrNull (Ljava/lang/String;)Lio/github/elliuqahs/beauthy/OtpAuthUri;
+}
+
+public final class io/github/elliuqahs/beauthy/OtpType : java/lang/Enum {
+	public static final field HOTP Lio/github/elliuqahs/beauthy/OtpType;
+	public static final field TOTP Lio/github/elliuqahs/beauthy/OtpType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/elliuqahs/beauthy/OtpType;
+	public static fun values ()[Lio/github/elliuqahs/beauthy/OtpType;
+}
+
+public final class io/github/elliuqahs/beauthy/Secret {
+	public static final field DEFAULT_BYTE_LENGTH I
+	public static final field INSTANCE Lio/github/elliuqahs/beauthy/Secret;
+	public static final field MIN_BYTE_LENGTH I
+	public final fun generate (I)Ljava/lang/String;
+	public static synthetic fun generate$default (Lio/github/elliuqahs/beauthy/Secret;IILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class io/github/elliuqahs/beauthy/Totp {
+	public fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;II)V
+	public synthetic fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun generate (J)Ljava/lang/String;
+	public static synthetic fun generate$default (Lio/github/elliuqahs/beauthy/Totp;JILjava/lang/Object;)Ljava/lang/String;
+	public final fun getAlgorithm ()Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public final fun getDigits ()I
+	public final fun getPeriod ()I
+	public final fun remainingSeconds (J)I
+	public static synthetic fun remainingSeconds$default (Lio/github/elliuqahs/beauthy/Totp;JILjava/lang/Object;)I
+	public final fun verify (Ljava/lang/String;JI)Z
+	public static synthetic fun verify$default (Lio/github/elliuqahs/beauthy/Totp;Ljava/lang/String;JIILjava/lang/Object;)Z
+}
+
