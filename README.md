@@ -17,7 +17,17 @@
 
 ---
 
-RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (RFC 4226)](https://tools.ietf.org/html/rfc4226) implementation supporting SHA-1, SHA-256, and SHA-512. Zero third-party dependencies — uses only platform-native cryptography.
+RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (RFC 4226)](https://tools.ietf.org/html/rfc4226) for Kotlin Multiplatform. Use it from common code on every platform, whether you are building an authenticator app or adding two-factor login to a server. Zero third-party dependencies: it uses each platform's native cryptography.
+
+## Features
+
+- **TOTP and HOTP** with SHA-1, SHA-256 and SHA-512, 6 to 9 digits, and any period
+- **Verification** with a clock-drift window (TOTP) or look-ahead (HOTP), using constant-time comparison
+- **`otpauth://` URIs**: parse authenticator QR codes and build them for enrollment
+- **Secret generation** from the platform's secure random source
+- **Base32** encoding and decoding
+- **Common API**: no platform-specific setup, everything works from `commonMain`
+- Tested against the RFC 4226 and RFC 6238 test vectors on Android, JVM and iOS
 
 ## Download
 
@@ -28,7 +38,7 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.elliuqahs:beauthy-sdk:0.1.0")
+            implementation("io.github.elliuqahs:beauthy-sdk:0.2.0")
         }
     }
 }
@@ -37,11 +47,11 @@ kotlin {
 </details>
 
 <details>
-<summary><b>Android Only (non-KMP)</b></summary>
+<summary><b>Android or JVM only (Gradle picks the right variant)</b></summary>
 
 ```kotlin
 dependencies {
-    implementation("io.github.elliuqahs:beauthy-sdk-android:0.1.0")
+    implementation("io.github.elliuqahs:beauthy-sdk:0.2.0")
 }
 ```
 
@@ -49,53 +59,95 @@ dependencies {
 
 ## Usage
 
-### Android / KMP Android target
+All examples below are common code and run unchanged on every supported platform.
+
+### Generate codes
 
 ```kotlin
-import com.maoungedev.beauthy.core.crypto.*
+import io.github.elliuqahs.beauthy.*
 
-val generator = TotpGenerator(JvmHmacProvider())
+// TOTP (defaults: SHA-1, 6 digits, 30 seconds)
+val totp = Totp(secret = "JBSWY3DPEHPK3PXP")
+val code = totp.generate()                  // uses the current time
+val remaining = totp.remainingSeconds()
 
-// TOTP (SHA-1, 6 digits, 30s)
-val code = generator.generate(secret = "JBSWY3DPEHPK3PXP", timestampMillis = System.currentTimeMillis())
-val remaining = generator.remainingSeconds(System.currentTimeMillis())
-
-// TOTP with SHA-256
-val code256 = generator.generate(
+// Custom parameters
+val totp256 = Totp(
     secret = "JBSWY3DPEHPK3PXP",
-    timestampMillis = System.currentTimeMillis(),
-    algorithm = HmacAlgorithm.SHA256
+    algorithm = HmacAlgorithm.SHA256,
+    digits = 8,
+    period = 60
 )
 
 // HOTP
-val hotp = generator.generateHotp(secret = "JBSWY3DPEHPK3PXP", counter = 42)
+val hotp = Hotp(secret = "JBSWY3DPEHPK3PXP")
+val hotpCode = hotp.generate(counter = 42)
+```
 
-// Validate Base32
-if (Base32.isValid(userInput)) {
-    val bytes = Base32.decode(userInput)
+Every function that takes a timestamp defaults to the current time. Pass `timestampMillis` explicitly to use your own clock or in tests.
+
+### Scan a QR code
+
+```kotlin
+val uri = OtpAuthUri.parseOrNull(scannedText) ?: return  // not an otpauth:// QR code
+
+println("${uri.issuer} - ${uri.accountName}")
+val code = when (uri.type) {
+    OtpType.TOTP -> uri.toTotp().generate()
+    OtpType.HOTP -> uri.toHotp().generate(uri.counter)
 }
 ```
 
-### iOS / KMP iOS target
+### Server-side two-factor login
 
 ```kotlin
-import com.maoungedev.beauthy.core.crypto.*
+// Enrollment: store the secret, show the URI as a QR code
+val secret = Secret.generate()
+val qrContent = OtpAuthUri(
+    type = OtpType.TOTP,
+    secret = secret,
+    accountName = "alice@example.com",
+    issuer = "Example"
+).toUriString()
 
-val generator = TotpGenerator(IosHmacProvider())
-
-// Same API as Android
-val code = generator.generate(secret = "JBSWY3DPEHPK3PXP", timestampMillis = getCurrentTimeMillis())
-val remaining = generator.remainingSeconds(getCurrentTimeMillis())
+// Login: accept the current code or one period either side
+val valid = Totp(secret).verify(userInput)
 ```
 
-> The only difference is the `HmacProvider` — use `JvmHmacProvider()` on Android and `IosHmacProvider()` on iOS. All other APIs are identical.
+A TOTP code stays valid for its whole window, so remember which time step each user last logged in with and reject reuse. `Hotp.verify` returns the matched counter; store it plus one as the next expected counter.
+
+### Validate user input
+
+```kotlin
+if (Base32.isValid(userInput)) {
+    val totp = Totp(userInput)
+}
+```
+
+Constructors throw `IllegalArgumentException` for an invalid secret, `digits` outside 6..9, or a non-positive `period`.
+
+More examples are in [`samples`](samples/src/main/kotlin/io/github/elliuqahs/beauthy/samples). Run them all with `./gradlew :samples:run`.
 
 ## Supported Platforms
 
-| Platform | HMAC Backend |
-|----------|-------------|
-| Android (minSdk 24) | `javax.crypto.Mac` |
-| iOS (arm64, simulatorArm64) | CoreCrypto `CCHmac` |
+| Platform | Targets | HMAC backend |
+|----------|---------|--------------|
+| Android | minSdk 24 | `javax.crypto.Mac` |
+| JVM | Java 11+ | `javax.crypto.Mac` |
+| iOS | arm64, simulatorArm64, x64 | CommonCrypto `CCHmac` |
+
+## Migrating from 0.1.x
+
+0.2.0 moves the API to the `io.github.elliuqahs.beauthy` package and removes the need for a platform `HmacProvider`. The old `com.maoungedev.beauthy.core.crypto` API still works but is deprecated and will be removed in a future release.
+
+| 0.1.x | 0.2.0 |
+|-------|-------|
+| `TotpGenerator(JvmHmacProvider())` / `TotpGenerator(IosHmacProvider())` | not needed |
+| `generator.generate(secret, now, digits, period, algorithm)` | `Totp(secret, algorithm, digits, period).generate(now)` |
+| `generator.generateHotp(secret, counter, digits, algorithm)` | `Hotp(secret, algorithm, digits).generate(counter)` |
+| `generator.remainingSeconds(now, period)` | `Totp(secret, period = period).remainingSeconds(now)` |
+| `com.maoungedev.beauthy.core.crypto.Base32` | `io.github.elliuqahs.beauthy.Base32` |
+| `com.maoungedev.beauthy.core.crypto.HmacAlgorithm` | `io.github.elliuqahs.beauthy.HmacAlgorithm` |
 
 ## Find this library useful?
 

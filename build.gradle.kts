@@ -3,5 +3,10 @@ plugins {
     // in each subproject's classloader
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.binaryCompatibilityValidator)
+}
+
+apiValidation {
+    ignoredProjects += listOf("samples")
 }
