@@ -104,6 +104,8 @@ public final class io/github/elliuqahs/beauthy/Secret {
 public final class io/github/elliuqahs/beauthy/Totp {
 	public fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;II)V
 	public synthetic fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun at (J)Lio/github/elliuqahs/beauthy/TotpCode;
+	public final fun current ()Lio/github/elliuqahs/beauthy/TotpCode;
 	public final fun generate (J)Ljava/lang/String;
 	public static synthetic fun generate$default (Lio/github/elliuqahs/beauthy/Totp;JILjava/lang/Object;)Ljava/lang/String;
 	public final fun getAlgorithm ()Lio/github/elliuqahs/beauthy/HmacAlgorithm;
@@ -113,5 +115,19 @@ public final class io/github/elliuqahs/beauthy/Totp {
 	public static synthetic fun remainingSeconds$default (Lio/github/elliuqahs/beauthy/Totp;JILjava/lang/Object;)I
 	public final fun verify (Ljava/lang/String;JI)Z
 	public static synthetic fun verify$default (Lio/github/elliuqahs/beauthy/Totp;Ljava/lang/String;JIILjava/lang/Object;)Z
+}
+
+public final class io/github/elliuqahs/beauthy/TotpCode {
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun formatted (Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun formatted$default (Lio/github/elliuqahs/beauthy/TotpCode;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun getCode ()Ljava/lang/String;
+	public final fun getExpiresAtMillis ()J
+	public final fun getPeriod ()I
+	public final fun getProgress ()F
+	public final fun getRemainingSeconds ()I
+	public final fun getValidFromMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 

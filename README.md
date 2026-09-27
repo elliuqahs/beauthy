@@ -22,6 +22,7 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 ## Features
 
 - **TOTP and HOTP** with SHA-1, SHA-256 and SHA-512, 6 to 9 digits, and any period
+- **Ready for display**: the code, a formatted version, the countdown and progress from one call
 - **Verification** with a clock-drift window (TOTP) or look-ahead (HOTP), using constant-time comparison
 - **`otpauth://` URIs**: parse authenticator QR codes and build them for enrollment
 - **Secret generation** from the platform's secure random source
@@ -68,8 +69,11 @@ import io.github.elliuqahs.beauthy.*
 
 // TOTP (defaults: SHA-1, 6 digits, 30 seconds)
 val totp = Totp(secret = "JBSWY3DPEHPK3PXP")
-val code = totp.generate()                  // uses the current time
-val remaining = totp.remainingSeconds()
+val current = totp.current()
+current.code              // "861370"
+current.formatted()       // "861 370"
+current.remainingSeconds  // 15
+current.progress          // 0.5
 
 // Custom parameters
 val totp256 = Totp(
@@ -84,7 +88,34 @@ val hotp = Hotp(secret = "JBSWY3DPEHPK3PXP")
 val hotpCode = hotp.generate(counter = 42)
 ```
 
-Every function that takes a timestamp defaults to the current time. Pass `timestampMillis` explicitly to use your own clock or in tests.
+`totp.generate()` returns just the code string. `totp.at(timestampMillis)` and the `timestampMillis` parameters let you use your own clock, for example in tests.
+
+### Display a live code
+
+A code is valid for one period (30 seconds by default). `current()` returns the code with its countdown and progress, all computed from the same instant, so call it once a second to keep a screen up to date. The code changes on its own when a new period starts.
+
+```kotlin
+class AccountViewModel(secret: String) : ViewModel() {
+    private val totp = Totp(secret)
+
+    val code: StateFlow<TotpCode> = flow {
+        while (true) {
+            emit(totp.current())
+            delay(1000)
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), totp.current())
+}
+
+@Composable
+fun AccountRow(viewModel: AccountViewModel) {
+    val current by viewModel.code.collectAsState()
+    Text(current.formatted())
+    Text("${current.remainingSeconds}s")
+    LinearProgressIndicator(progress = { current.progress })
+}
+```
+
+If you only need to refresh when the code changes, wait until `current.expiresAtMillis` instead of polling every second.
 
 ### Scan a QR code
 

@@ -5,8 +5,11 @@ package io.github.elliuqahs.beauthy
  *
  * ```kotlin
  * val totp = Totp(secret = "JBSWY3DPEHPK3PXP")
- * val code = totp.generate()              // current time
- * val left = totp.remainingSeconds()
+ *
+ * val current = totp.current()            // code + countdown for display
+ * current.formatted()                     // "861 370"
+ * current.remainingSeconds                // 15
+ *
  * val ok = totp.verify(userInput)         // accepts ±1 period of clock drift
  * ```
  *
@@ -36,7 +39,33 @@ public class Totp(
     }
 
     /**
-     * Returns the code for the time step containing [timestampMillis].
+     * Returns the code for the current time with its countdown and progress.
+     *
+     * To keep a display up to date, call this again every second, or schedule the next
+     * refresh for [TotpCode.expiresAtMillis].
+     */
+    public fun current(): TotpCode = at(currentTimeMillis())
+
+    /**
+     * Returns the code for [timestampMillis] with its countdown and progress.
+     *
+     * @throws IllegalArgumentException if [timestampMillis] is negative
+     */
+    public fun at(timestampMillis: Long): TotpCode {
+        val step = timeStep(timestampMillis)
+        val validFrom = step * period * 1000L
+        return TotpCode(
+            code = generateOtp(key, step, digits, algorithm),
+            validFromMillis = validFrom,
+            expiresAtMillis = validFrom + period * 1000L,
+            timestampMillis = timestampMillis
+        )
+    }
+
+    /**
+     * Returns just the code for the time step containing [timestampMillis].
+     *
+     * Use [current] or [at] when you also need the countdown.
      *
      * @throws IllegalArgumentException if [timestampMillis] is negative
      */
