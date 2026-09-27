@@ -23,7 +23,7 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 
 - **TOTP and HOTP** with SHA-1, SHA-256 and SHA-512, 6 to 9 digits, and any period
 - **Ready for display**: the code, a formatted version, the countdown and progress from one call
-- **Live updates** (optional `beauthy-sdk-coroutines`): a `Flow` that ticks every second
+- **Live updates**: a `Flow` (`beauthy-sdk-coroutines`) or Compose state (`beauthy-sdk-compose`) that ticks every second
 - **Verification** with a clock-drift window (TOTP) or look-ahead (HOTP), using constant-time comparison
 - **`otpauth://` URIs**: parse authenticator QR codes and build them for enrollment
 - **Secret generation** from the platform's secure random source
@@ -45,6 +45,8 @@ kotlin {
 
             // Optional: live codes as a Flow
             implementation("io.github.elliuqahs:beauthy-sdk-coroutines:0.2.0")
+            // Optional: live codes as Compose state (includes beauthy-sdk-coroutines)
+            implementation("io.github.elliuqahs:beauthy-sdk-compose:0.2.0")
         }
     }
 }
@@ -97,9 +99,23 @@ val hotpCode = hotp.generate(counter = 42)
 
 ### Display a live code
 
-A code is valid for one period (30 seconds by default). `current()` returns the code with its countdown and progress, all computed from the same instant.
+A code is valid for one period (30 seconds by default). `current()` returns the code with its countdown and progress, all computed from the same instant. The optional artifacts keep it up to date for you, ticking at the start of every second so the countdown follows the clock and the code changes as soon as a new period begins.
 
-With `beauthy-sdk-coroutines`, `codes()` turns that into a `Flow` that emits at the start of every second, so the countdown ticks with the clock and the code changes as soon as a new period begins:
+**Compose Multiplatform** (`beauthy-sdk-compose`):
+
+```kotlin
+@Composable
+fun AccountRow(secret: String) {
+    val current by rememberTotpCode(secret)
+    Text(current.formatted())                                  // "861 370"
+    Text("${current.remainingSeconds}s")                        // "15s"
+    LinearProgressIndicator(progress = { current.progress })
+}
+```
+
+`rememberTotpCode(secret, algorithm, digits, period)` throws for an invalid secret, so validate user input with `Base32.isValid` first, or pass a `Totp` you created yourself: `rememberTotpCode(totp)`.
+
+**Coroutines** (`beauthy-sdk-coroutines`), for example in a ViewModel:
 
 ```kotlin
 class AccountViewModel(secret: String) : ViewModel() {
@@ -108,17 +124,9 @@ class AccountViewModel(secret: String) : ViewModel() {
     val code: StateFlow<TotpCode> = totp.codes()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), totp.current())
 }
-
-@Composable
-fun AccountRow(viewModel: AccountViewModel) {
-    val current by viewModel.code.collectAsState()
-    Text(current.formatted())
-    Text("${current.remainingSeconds}s")
-    LinearProgressIndicator(progress = { current.progress })
-}
 ```
 
-Without coroutines, call `current()` once a second yourself, or schedule the next refresh for `current.expiresAtMillis` if you only need to know when the code changes.
+**Neither**: call `current()` once a second yourself, or schedule the next refresh for `current.expiresAtMillis` if you only need to know when the code changes.
 
 ### Scan a QR code
 

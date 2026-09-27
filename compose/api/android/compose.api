@@ -1,0 +1,5 @@
+public final class io/github/elliuqahs/beauthy/compose/RememberTotpCodeKt {
+	public static final fun rememberTotpCode (Lio/github/elliuqahs/beauthy/Totp;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
+	public static final fun rememberTotpCode (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IILandroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+}
+
