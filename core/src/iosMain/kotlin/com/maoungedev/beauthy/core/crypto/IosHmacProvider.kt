@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.maoungedev.beauthy.core.crypto
 
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -11,6 +13,7 @@ import platform.CoreCrypto.kCCHmacAlgSHA1
 import platform.CoreCrypto.kCCHmacAlgSHA256
 import platform.CoreCrypto.kCCHmacAlgSHA512
 
+@Deprecated("HMAC is now provided by the library. Use io.github.elliuqahs.beauthy.Totp or Hotp directly.")
 public class IosHmacProvider : HmacProvider {
 
     @OptIn(ExperimentalForeignApi::class)

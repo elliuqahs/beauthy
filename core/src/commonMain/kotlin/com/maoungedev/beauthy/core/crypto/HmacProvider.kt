@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.maoungedev.beauthy.core.crypto
 
 /**
@@ -6,6 +8,10 @@ package com.maoungedev.beauthy.core.crypto
  * Maps to the algorithm identifiers used in [RFC 6238](https://tools.ietf.org/html/rfc6238)
  * and the `otpauth://` URI `algorithm` parameter.
  */
+@Deprecated(
+    "Moved to io.github.elliuqahs.beauthy.HmacAlgorithm.",
+    ReplaceWith("HmacAlgorithm", "io.github.elliuqahs.beauthy.HmacAlgorithm")
+)
 public enum class HmacAlgorithm {
     SHA1,
     SHA256,
@@ -19,6 +25,7 @@ public enum class HmacAlgorithm {
  * Key and data arrays should be treated as sensitive material; callers are responsible
  * for clearing them after use.
  */
+@Deprecated("HMAC is now provided by the library on every platform. Use io.github.elliuqahs.beauthy.Totp or Hotp directly.")
 public interface HmacProvider {
 
     /**

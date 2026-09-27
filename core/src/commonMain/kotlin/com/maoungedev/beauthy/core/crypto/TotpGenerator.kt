@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.maoungedev.beauthy.core.crypto
 
 /**
@@ -12,6 +14,10 @@ package com.maoungedev.beauthy.core.crypto
  *
  * @param hmacProvider platform-specific HMAC implementation
  */
+@Deprecated(
+    "Use io.github.elliuqahs.beauthy.Totp or io.github.elliuqahs.beauthy.Hotp, which need no HmacProvider " +
+        "and work from common code."
+)
 public class TotpGenerator(
     private val hmacProvider: HmacProvider
 ) {

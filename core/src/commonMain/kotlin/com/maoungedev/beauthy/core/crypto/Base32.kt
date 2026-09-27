@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.maoungedev.beauthy.core.crypto
 
 /**
@@ -7,6 +9,10 @@ package com.maoungedev.beauthy.core.crypto
  * Supports the standard alphabet (`A-Z`, `2-7`), optional padding (`=`),
  * spaces, and case-insensitive input.
  */
+@Deprecated(
+    "Moved to io.github.elliuqahs.beauthy.Base32.",
+    ReplaceWith("Base32", "io.github.elliuqahs.beauthy.Base32")
+)
 public object Base32 {
     private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 

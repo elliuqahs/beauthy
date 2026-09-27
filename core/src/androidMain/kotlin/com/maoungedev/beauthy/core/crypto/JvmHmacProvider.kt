@@ -1,8 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.maoungedev.beauthy.core.crypto
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
+@Deprecated("HMAC is now provided by the library. Use io.github.elliuqahs.beauthy.Totp or Hotp directly.")
 public class JvmHmacProvider : HmacProvider {
 
     override fun hmac(algorithm: HmacAlgorithm, key: ByteArray, data: ByteArray): ByteArray {

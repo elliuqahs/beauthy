@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.maoungedev.beauthy.core.crypto
 
 import kotlin.test.Test
