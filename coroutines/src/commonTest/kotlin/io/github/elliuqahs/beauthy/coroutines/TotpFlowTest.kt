@@ -52,6 +52,16 @@ class TotpFlowTest {
         assertEquals(totp.generate(first.timestampMillis), first.code)
     }
 
+    @Test
+    fun codes_usesClockOffset() = runTest {
+        val offset = 10 * 60 * 1000L
+        val shifted = Totp("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ", clockOffsetMillis = offset)
+        val plainNow = totp.current().timestampMillis
+        val first = shifted.codes().first()
+        assertTrue(first.timestampMillis - plainNow in offset..offset + 1_000L)
+        assertEquals(totp.generate(first.timestampMillis), first.code)
+    }
+
     private companion object {
         // Start of a period: 1111111110 s is a multiple of 30.
         const val START = 1111111110_000L

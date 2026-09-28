@@ -35,6 +35,11 @@ public final class io/github/elliuqahs/beauthy/Base32 {
 	public final fun isValid (Ljava/lang/String;)Z
 }
 
+public final class io/github/elliuqahs/beauthy/ClockOffset {
+	public static final field INSTANCE Lio/github/elliuqahs/beauthy/ClockOffset;
+	public final fun from (J)J
+}
+
 public final class io/github/elliuqahs/beauthy/HmacAlgorithm : java/lang/Enum {
 	public static final field SHA1 Lio/github/elliuqahs/beauthy/HmacAlgorithm;
 	public static final field SHA256 Lio/github/elliuqahs/beauthy/HmacAlgorithm;
@@ -71,7 +76,8 @@ public final class io/github/elliuqahs/beauthy/OtpAuthUri {
 	public fun hashCode ()I
 	public final fun toHotp ()Lio/github/elliuqahs/beauthy/Hotp;
 	public fun toString ()Ljava/lang/String;
-	public final fun toTotp ()Lio/github/elliuqahs/beauthy/Totp;
+	public final fun toTotp (J)Lio/github/elliuqahs/beauthy/Totp;
+	public static synthetic fun toTotp$default (Lio/github/elliuqahs/beauthy/OtpAuthUri;JILjava/lang/Object;)Lio/github/elliuqahs/beauthy/Totp;
 	public final fun toUriString ()Ljava/lang/String;
 }
 
@@ -97,13 +103,14 @@ public final class io/github/elliuqahs/beauthy/Secret {
 }
 
 public final class io/github/elliuqahs/beauthy/Totp {
-	public fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;II)V
-	public synthetic fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIJ)V
+	public synthetic fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun at (J)Lio/github/elliuqahs/beauthy/TotpCode;
 	public final fun current ()Lio/github/elliuqahs/beauthy/TotpCode;
 	public final fun generate (J)Ljava/lang/String;
 	public static synthetic fun generate$default (Lio/github/elliuqahs/beauthy/Totp;JILjava/lang/Object;)Ljava/lang/String;
 	public final fun getAlgorithm ()Lio/github/elliuqahs/beauthy/HmacAlgorithm;
+	public final fun getClockOffsetMillis ()J
 	public final fun getDigits ()I
 	public final fun getPeriod ()I
 	public final fun remainingSeconds (J)I

@@ -42,8 +42,11 @@ public fun rememberTotpCode(
     secret: String,
     algorithm: HmacAlgorithm = HmacAlgorithm.SHA1,
     digits: Int = 6,
-    period: Int = 30
+    period: Int = 30,
+    clockOffsetMillis: Long = 0
 ): State<TotpCode> {
-    val totp = remember(secret, algorithm, digits, period) { Totp(secret, algorithm, digits, period) }
+    val totp = remember(secret, algorithm, digits, period, clockOffsetMillis) {
+        Totp(secret, algorithm, digits, period, clockOffsetMillis)
+    }
     return rememberTotpCode(totp)
 }

@@ -23,6 +23,7 @@ RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (
 
 - **TOTP and HOTP** with SHA-1, SHA-256 and SHA-512, 6 to 9 digits, and any period
 - **Ready for display**: the code, a formatted version, the countdown and progress from one call
+- **Clock correction** for devices whose clock is wrong
 - **Live updates**: a `Flow` (`beauthy-sdk-coroutines`) or Compose state (`beauthy-sdk-compose`) that ticks every second
 - **Verification** with a clock-drift window (TOTP) or look-ahead (HOTP), using constant-time comparison
 - **`otpauth://` URIs**: parse authenticator QR codes and build them for enrollment
@@ -127,6 +128,20 @@ class AccountViewModel(secret: String) : ViewModel() {
 ```
 
 **Neither**: call `current()` once a second yourself, or schedule the next refresh for `current.expiresAtMillis` if you only need to know when the code changes.
+
+### When the device clock is wrong
+
+Codes and countdowns come only from the clock, so the server and the app agree as long as both clocks are right. A phone whose clock is off by more than about 30 seconds produces codes the server rejects. Measure the error once against a trusted time, such as the `Date` header of any HTTPS response, and pass it in:
+
+```kotlin
+val offset = ClockOffset.from(serverTimeMillis)   // positive when the device is behind
+
+val totp = Totp(secret, clockOffsetMillis = offset)
+val totpFromQr = OtpAuthUri.parse(qrText).toTotp(clockOffsetMillis = offset)
+val current by rememberTotpCode(secret, clockOffsetMillis = offset)   // Compose
+```
+
+The offset applies wherever the current time is used (`current()`, `generate()`, `verify()`, `codes()`); timestamps you pass explicitly are used as given.
 
 ### Scan a QR code
 

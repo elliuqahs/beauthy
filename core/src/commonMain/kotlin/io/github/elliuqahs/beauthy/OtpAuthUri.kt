@@ -59,11 +59,12 @@ public class OtpAuthUri(
     /**
      * Creates a [Totp] for this account.
      *
+     * @param clockOffsetMillis see [Totp.clockOffsetMillis]
      * @throws IllegalStateException if [type] is not [OtpType.TOTP]
      */
-    public fun toTotp(): Totp {
+    public fun toTotp(clockOffsetMillis: Long = 0): Totp {
         check(type == OtpType.TOTP) { "Cannot create Totp from a $type URI" }
-        return Totp(secret, algorithm, digits, period)
+        return Totp(secret, algorithm, digits, period, clockOffsetMillis)
     }
 
     /**

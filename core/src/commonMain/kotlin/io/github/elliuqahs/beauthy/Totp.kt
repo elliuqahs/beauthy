@@ -13,8 +13,8 @@ package io.github.elliuqahs.beauthy
  * val ok = totp.verify(userInput)         // accepts ±1 period of clock drift
  * ```
  *
- * Every function that takes a timestamp defaults to the current system time; pass one
- * explicitly for tests or to use your own clock.
+ * Every function that takes a timestamp defaults to the current time: the system clock
+ * plus [clockOffsetMillis]. Timestamps you pass explicitly are used as given.
  *
  * The decoded secret is held in memory for the lifetime of this instance.
  *
@@ -22,13 +22,16 @@ package io.github.elliuqahs.beauthy
  * @param algorithm HMAC algorithm (default [HmacAlgorithm.SHA1])
  * @param digits code length, 6 to 9 (default 6)
  * @param period time step in seconds (default 30)
+ * @param clockOffsetMillis correction added to the system clock, for devices whose clock is
+ *   wrong. Positive when the device is behind. Compute it with [ClockOffset.from].
  * @throws IllegalArgumentException if [secret] is not valid Base32, or [digits] or [period] is out of range
  */
 public class Totp(
     secret: String,
     public val algorithm: HmacAlgorithm = HmacAlgorithm.SHA1,
     public val digits: Int = 6,
-    public val period: Int = 30
+    public val period: Int = 30,
+    public val clockOffsetMillis: Long = 0
 ) {
     private val key: ByteArray
 
@@ -44,7 +47,7 @@ public class Totp(
      * To keep a display up to date, call this again every second, or schedule the next
      * refresh for [TotpCode.expiresAtMillis].
      */
-    public fun current(): TotpCode = at(currentTimeMillis())
+    public fun current(): TotpCode = at(now())
 
     /**
      * Returns the code for [timestampMillis] with its countdown and progress.
@@ -69,13 +72,13 @@ public class Totp(
      *
      * @throws IllegalArgumentException if [timestampMillis] is negative
      */
-    public fun generate(timestampMillis: Long = currentTimeMillis()): String =
+    public fun generate(timestampMillis: Long = now()): String =
         generateOtp(key, timeStep(timestampMillis), digits, algorithm)
 
     /**
      * Seconds until the code for [timestampMillis] expires, from 1 to [period].
      */
-    public fun remainingSeconds(timestampMillis: Long = currentTimeMillis()): Int {
+    public fun remainingSeconds(timestampMillis: Long = now()): Int {
         requireTimestamp(timestampMillis)
         return (period - (timestampMillis / 1000L) % period).toInt()
     }
@@ -91,7 +94,7 @@ public class Totp(
      */
     public fun verify(
         code: String,
-        timestampMillis: Long = currentTimeMillis(),
+        timestampMillis: Long = now(),
         window: Int = 1
     ): Boolean {
         require(window >= 0) { "window must not be negative, was $window" }
@@ -103,6 +106,8 @@ public class Totp(
         }
         return matched
     }
+
+    private fun now(): Long = currentTimeMillis() + clockOffsetMillis
 
     private fun timeStep(timestampMillis: Long): Long {
         requireTimestamp(timestampMillis)
