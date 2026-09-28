@@ -206,6 +206,10 @@ More examples are in [`samples`](samples/src/main/kotlin/io/github/elliuqahs/bea
 | `com.maoungedev.beauthy.core.crypto.Base32` | `io.github.elliuqahs.beauthy.Base32` |
 | `com.maoungedev.beauthy.core.crypto.HmacAlgorithm` | `io.github.elliuqahs.beauthy.HmacAlgorithm` |
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
+
 ## Find this library useful?
 
 Support it by joining __[stargazers](https://github.com/elliuqahs/beauthy/stargazers)__ for this repository. :star:
