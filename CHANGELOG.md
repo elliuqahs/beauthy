@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Before 1.0.0, minor versions may contain breaking changes.
 
-## 0.2.0 - Unreleased
+## 0.2.0 - 2026-09-28
 
 The API moves to the `io.github.elliuqahs.beauthy` package and works from common code
 with no platform setup. The 0.1.x API keeps working but is deprecated; see
