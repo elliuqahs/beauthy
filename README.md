@@ -213,7 +213,7 @@ Support it by joining __[stargazers](https://github.com/elliuqahs/beauthy/starga
 ## License
 
 ```
-Copyright 2025 Beauthy
+Copyright 2025 elliuqahs
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
