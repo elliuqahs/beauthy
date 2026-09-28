@@ -53,9 +53,12 @@ public final class io/github/elliuqahs/beauthy/HmacAlgorithm : java/lang/Enum {
 public final class io/github/elliuqahs/beauthy/Hotp {
 	public fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;I)V
 	public synthetic fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun generate (J)Ljava/lang/String;
 	public final fun getAlgorithm ()Lio/github/elliuqahs/beauthy/HmacAlgorithm;
 	public final fun getDigits ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 	public final fun verify (Ljava/lang/String;JI)Ljava/lang/Long;
 	public static synthetic fun verify$default (Lio/github/elliuqahs/beauthy/Hotp;Ljava/lang/String;JIILjava/lang/Object;)Ljava/lang/Long;
 }
@@ -107,14 +110,17 @@ public final class io/github/elliuqahs/beauthy/Totp {
 	public synthetic fun <init> (Ljava/lang/String;Lio/github/elliuqahs/beauthy/HmacAlgorithm;IIJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun at (J)Lio/github/elliuqahs/beauthy/TotpCode;
 	public final fun current ()Lio/github/elliuqahs/beauthy/TotpCode;
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun generate (J)Ljava/lang/String;
 	public static synthetic fun generate$default (Lio/github/elliuqahs/beauthy/Totp;JILjava/lang/Object;)Ljava/lang/String;
 	public final fun getAlgorithm ()Lio/github/elliuqahs/beauthy/HmacAlgorithm;
 	public final fun getClockOffsetMillis ()J
 	public final fun getDigits ()I
 	public final fun getPeriod ()I
+	public fun hashCode ()I
 	public final fun remainingSeconds (J)I
 	public static synthetic fun remainingSeconds$default (Lio/github/elliuqahs/beauthy/Totp;JILjava/lang/Object;)I
+	public fun toString ()Ljava/lang/String;
 	public final fun verify (Ljava/lang/String;JI)Z
 	public static synthetic fun verify$default (Lio/github/elliuqahs/beauthy/Totp;Ljava/lang/String;JIILjava/lang/Object;)Z
 }

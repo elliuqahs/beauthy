@@ -153,4 +153,14 @@ class OtpAuthUriTest {
         assertFalse("JBSWY3DPEHPK3PXP" in text)
         assertTrue("secret=***" in text)
     }
+
+    @Test
+    fun colonInIssuerOrAccount_throws() {
+        assertFailsWith<IllegalArgumentException> { OtpAuthUri(OtpType.TOTP, "JBSWY3DPEHPK3PXP", "a:b") }
+        assertFailsWith<IllegalArgumentException> {
+            OtpAuthUri(OtpType.TOTP, "JBSWY3DPEHPK3PXP", "alice", issuer = "ACME: Inc")
+        }
+        // A label with more than one separator cannot be split unambiguously.
+        assertNull(OtpAuthUri.parseOrNull("otpauth://totp/ACME:alice:work?secret=JBSWY3DPEHPK3PXP"))
+    }
 }

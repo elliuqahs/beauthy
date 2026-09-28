@@ -87,6 +87,8 @@ public class Totp(
      * Checks [code] against the time step containing [timestampMillis] and [window]
      * steps on either side, to tolerate clock drift between client and server.
      *
+     * Whitespace in [code] is ignored, so `"861 370"` verifies like `"861370"`.
+     *
      * A code stays valid for its whole window, so a server should remember which time
      * step each user last authenticated with and reject reuse.
      *
@@ -99,13 +101,40 @@ public class Totp(
     ): Boolean {
         require(window >= 0) { "window must not be negative, was $window" }
         val current = timeStep(timestampMillis)
+        val candidate = normalizeCode(code)
         var matched = false
         for (step in (current - window).coerceAtLeast(0)..current + window) {
             // Check every step so the time taken does not reveal which one matched.
-            if (constantTimeEquals(generateOtp(key, step, digits, algorithm), code)) matched = true
+            if (constantTimeEquals(generateOtp(key, step, digits, algorithm), candidate)) matched = true
         }
         return matched
     }
+
+    /**
+     * Two instances are equal when they produce the same codes: the same decoded secret,
+     * [algorithm], [digits], [period] and [clockOffsetMillis]. A Totp re-created with the
+     * same settings is therefore a stable key, for example for Compose's `remember`.
+     */
+    override fun equals(other: Any?): Boolean =
+        other is Totp &&
+            key.contentEquals(other.key) &&
+            algorithm == other.algorithm &&
+            digits == other.digits &&
+            period == other.period &&
+            clockOffsetMillis == other.clockOffsetMillis
+
+    override fun hashCode(): Int {
+        var result = key.contentHashCode()
+        result = 31 * result + algorithm.hashCode()
+        result = 31 * result + digits
+        result = 31 * result + period
+        result = 31 * result + clockOffsetMillis.hashCode()
+        return result
+    }
+
+    /** Hides the secret so instances are safe to log. */
+    override fun toString(): String =
+        "Totp(secret=***, algorithm=$algorithm, digits=$digits, period=$period, clockOffsetMillis=$clockOffsetMillis)"
 
     private fun now(): Long = currentTimeMillis() + clockOffsetMillis
 

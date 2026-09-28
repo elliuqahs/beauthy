@@ -1,5 +1,7 @@
 package io.github.elliuqahs.beauthy
 
+import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -54,5 +56,24 @@ class HotpTest {
         assertFailsWith<IllegalArgumentException> { Hotp("not base32!") }
         assertFailsWith<IllegalArgumentException> { hotp.generate(-1) }
         assertFailsWith<IllegalArgumentException> { hotp.verify("755224", counter = 0, lookAhead = -1) }
+    }
+
+    @Test
+    fun verify_ignoresWhitespace() {
+        assertEquals(3L, hotp.verify("969 429", counter = 3))
+    }
+
+    @Test
+    fun equals_sameSettings_areEqual() {
+        assertEquals(Hotp(RfcVectors.SECRET_SHA1), Hotp(RfcVectors.SECRET_SHA1.lowercase()))
+        assertEquals(Hotp(RfcVectors.SECRET_SHA1).hashCode(), Hotp(RfcVectors.SECRET_SHA1.lowercase()).hashCode())
+        assertNotEquals(Hotp(RfcVectors.SECRET_SHA1), Hotp(RfcVectors.SECRET_SHA1, digits = 8))
+        assertNotEquals(Hotp(RfcVectors.SECRET_SHA1), Hotp(RfcVectors.SECRET_SHA256))
+    }
+
+    @Test
+    fun toString_hidesSecret() {
+        assertTrue("secret=***" in hotp.toString())
+        assertTrue(RfcVectors.SECRET_SHA1 !in hotp.toString())
     }
 }

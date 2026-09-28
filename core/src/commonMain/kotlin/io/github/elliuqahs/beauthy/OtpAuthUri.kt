@@ -35,7 +35,8 @@ public enum class OtpType {
  * @property secret Base32-encoded shared secret, normalized to uppercase without spaces or padding
  * @property counter initial counter; only meaningful for [OtpType.HOTP]
  * @property period time step in seconds; only meaningful for [OtpType.TOTP]
- * @throws IllegalArgumentException if [secret] is not valid Base32, or [digits], [period] or [counter] is out of range
+ * @throws IllegalArgumentException if [secret] is not valid Base32, [issuer] or [accountName] contains a colon,
+ *   or [digits], [period] or [counter] is out of range
  */
 public class OtpAuthUri(
     public val type: OtpType,
@@ -51,6 +52,9 @@ public class OtpAuthUri(
 
     init {
         require(Base32.isValid(this.secret)) { "secret is not valid Base32" }
+        // The label format "Issuer:account" cannot represent a colon inside either part.
+        require(':' !in accountName) { "accountName must not contain ':'" }
+        require(issuer == null || ':' !in issuer) { "issuer must not contain ':'" }
         requireDigits(digits)
         require(period > 0) { "period must be positive, was $period" }
         require(counter >= 0) { "counter must not be negative, was $counter" }

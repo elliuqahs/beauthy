@@ -13,6 +13,9 @@ import io.github.elliuqahs.beauthy.coroutines.codes
  * The current code of [totp] as Compose state, updated at the start of every second
  * while this call stays in the composition.
  *
+ * Updates restart only when [totp] changes. [Totp] instances with the same settings are
+ * equal, so creating one inline, as in `rememberTotpCode(Totp(secret))`, is safe.
+ *
  * ```kotlin
  * @Composable
  * fun AccountRow(totp: Totp) {

@@ -1,5 +1,6 @@
 package io.github.elliuqahs.beauthy
 
+import kotlin.test.assertNotEquals
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -115,5 +116,39 @@ class TotpTest {
         times.zip(expected.toList()).forEach { (seconds, code) ->
             assertEquals(code, totp.generate(seconds * 1000L), "${totp.algorithm} at t=$seconds")
         }
+    }
+
+    @Test
+    fun verify_ignoresWhitespace() {
+        val totp = Totp(RfcVectors.SECRET_SHA1)
+        assertTrue(totp.verify("287 082", 59_000L))
+        assertTrue(totp.verify(" 287082\n", 59_000L))
+        assertTrue(totp.verify(totp.at(59_000L).formatted(), 59_000L))
+    }
+
+    @Test
+    fun equals_sameSettings_areEqual() {
+        val a = Totp("JBSWY3DPEHPK3PXP", HmacAlgorithm.SHA256, digits = 8, period = 60, clockOffsetMillis = 5)
+        // Same secret written differently decodes to the same key.
+        val b = Totp("jbsw y3dp ehpk 3pxp", HmacAlgorithm.SHA256, digits = 8, period = 60, clockOffsetMillis = 5)
+        assertEquals(a, b)
+        assertEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun equals_anyDifference_isNotEqual() {
+        val base = Totp(RfcVectors.SECRET_SHA1)
+        assertNotEquals(base, Totp(RfcVectors.SECRET_SHA256))
+        assertNotEquals(base, Totp(RfcVectors.SECRET_SHA1, algorithm = HmacAlgorithm.SHA256))
+        assertNotEquals(base, Totp(RfcVectors.SECRET_SHA1, digits = 8))
+        assertNotEquals(base, Totp(RfcVectors.SECRET_SHA1, period = 60))
+        assertNotEquals(base, Totp(RfcVectors.SECRET_SHA1, clockOffsetMillis = 1))
+    }
+
+    @Test
+    fun toString_hidesSecret() {
+        val text = Totp(RfcVectors.SECRET_SHA1).toString()
+        assertFalse(RfcVectors.SECRET_SHA1 in text)
+        assertTrue("secret=***" in text)
     }
 }

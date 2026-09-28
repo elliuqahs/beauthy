@@ -43,6 +43,11 @@ internal fun requireDigits(digits: Int) {
 internal fun decodeSecret(secret: String): ByteArray = Base32.decode(secret)
 
 /**
+ * Strips whitespace so a code copied from [TotpCode.formatted] (`"861 370"`) still verifies.
+ */
+internal fun normalizeCode(code: String): String = code.filterNot { it.isWhitespace() }
+
+/**
  * Compares two codes in time independent of where they first differ.
  */
 internal fun constantTimeEquals(a: String, b: String): Boolean {
