@@ -12,6 +12,7 @@
   <a href="https://kotlinlang.org/docs/multiplatform.html"><img src="https://img.shields.io/badge/Kotlin_Multiplatform-orange.svg?style=flat&logo=kotlin&logoColor=white"/></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-34A853.svg?style=flat&logo=android&logoColor=white"/></a>
   <a href="https://developer.apple.com/ios/"><img src="https://img.shields.io/badge/iOS-000000.svg?style=flat&logo=apple&logoColor=white"/></a>
+  <a href="https://kotlinlang.org/docs/jvm-get-started.html"><img src="https://img.shields.io/badge/JVM-ED8B00.svg?style=flat&logo=openjdk&logoColor=white"/></a>
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat"/>
 </p>
 
