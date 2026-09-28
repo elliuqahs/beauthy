@@ -33,6 +33,8 @@ with no platform setup. The 0.1.x API keeps working but is deprecated; see
 - `beauthy-sdk-compose` artifact: `rememberTotpCode()` exposes the live code as Compose
   state.
 - Runnable examples in the `samples` module.
+- API reference generated with Dokka and published in the javadoc JARs, readable on
+  javadoc.io.
 
 ### Changed
 

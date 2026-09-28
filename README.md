@@ -183,6 +183,8 @@ if (Base32.isValid(userInput)) {
 
 Constructors throw `IllegalArgumentException` for an invalid secret, `digits` outside 6..9, or a non-positive `period`.
 
+The full API reference is on javadoc.io for [beauthy-sdk](https://javadoc.io/doc/io.github.elliuqahs/beauthy-sdk), [beauthy-sdk-coroutines](https://javadoc.io/doc/io.github.elliuqahs/beauthy-sdk-coroutines) and [beauthy-sdk-compose](https://javadoc.io/doc/io.github.elliuqahs/beauthy-sdk-compose).
+
 More examples are in [`samples`](samples/src/main/kotlin/io/github/elliuqahs/beauthy/samples). Run them all with `./gradlew :samples:run`.
 
 ## Supported Platforms

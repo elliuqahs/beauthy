@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.mavenPublish) apply false
+    alias(libs.plugins.dokka) apply false
     alias(libs.plugins.binaryCompatibilityValidator)
 }
 

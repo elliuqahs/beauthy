@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.mavenPublish)
+    alias(libs.plugins.dokka)
 }
 
 kotlin {
@@ -67,9 +68,21 @@ android {
     }
 }
 
+dokka {
+    moduleName.set("beauthy-sdk")
+    dokkaSourceSets.configureEach {
+        includes.from("Module.md")
+        sourceLink {
+            localDirectory.set(file("src"))
+            remoteUrl("https://github.com/elliuqahs/beauthy/tree/main/core/src")
+            remoteLineSuffix.set("#L")
+        }
+    }
+}
+
 mavenPublishing {
     coordinates(artifactId = "beauthy-sdk")
-    configure(KotlinMultiplatform(javadocJar = JavadocJar.Empty()))
+    configure(KotlinMultiplatform(javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml")))
 
     pom {
         name.set("Beauthy SDK")

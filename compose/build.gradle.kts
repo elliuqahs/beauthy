@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.mavenPublish)
+    alias(libs.plugins.dokka)
 }
 
 kotlin {
@@ -51,9 +52,21 @@ android {
     }
 }
 
+dokka {
+    moduleName.set("beauthy-sdk-compose")
+    dokkaSourceSets.configureEach {
+        includes.from("Module.md")
+        sourceLink {
+            localDirectory.set(file("src"))
+            remoteUrl("https://github.com/elliuqahs/beauthy/tree/main/compose/src")
+            remoteLineSuffix.set("#L")
+        }
+    }
+}
+
 mavenPublishing {
     coordinates(artifactId = "beauthy-sdk-compose")
-    configure(KotlinMultiplatform(javadocJar = JavadocJar.Empty()))
+    configure(KotlinMultiplatform(javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml")))
 
     pom {
         name.set("Beauthy SDK Compose")
