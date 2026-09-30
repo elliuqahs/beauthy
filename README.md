@@ -20,6 +20,9 @@
 
 RFC-compliant [TOTP (RFC 6238)](https://tools.ietf.org/html/rfc6238) and [HOTP (RFC 4226)](https://tools.ietf.org/html/rfc4226) for Kotlin Multiplatform. Use it from common code on every platform, whether you are building an authenticator app or adding two-factor login to a server. Zero third-party dependencies: it uses each platform's native cryptography.
 
+## Apps Demo
+- **Play Store**: https://play.google.com/store/apps/details?id=com.elliuqahs.kunciku&pcampaignid=web_share
+
 ## Features
 
 - **TOTP and HOTP** with SHA-1, SHA-256 and SHA-512, 6 to 9 digits, and any period
